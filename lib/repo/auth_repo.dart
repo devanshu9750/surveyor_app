@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:surveyor_app/core/app_api.dart';
+import 'package:surveyor_app/core/app_constants.dart';
 
 class AuthRepo extends GetConnect {
   AuthRepo._privateConstructor();
@@ -12,7 +13,7 @@ class AuthRepo extends GetConnect {
     if (response.statusCode != 200) throw Exception('Login failed: ${response.body}');
 
     Map<String, dynamic> data = response.body;
-    if (data['status'] == 'error') {
+    if (data['status'] == AppConstants.errorStatus) {
       throw Exception('Login failed: ${data['message']}');
     }
 

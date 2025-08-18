@@ -11,7 +11,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.white)),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue, brightness: Brightness.light),
+      ),
       initialRoute: AppGetStorage().read('token') != null ? HomeScreen.routeName : LoginScreen.routeName,
       routes: AppRouter.routes,
     );

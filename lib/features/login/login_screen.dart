@@ -55,7 +55,7 @@ class LoginScreen extends StatelessWidget {
                         SizedBox(
                           height: 48,
                           child: Obx(
-                            () => ElevatedButton(onPressed: controller.enableLoginButton.value ? controller.login : null, child: const Text('Login')),
+                            () => FilledButton(onPressed: controller.enableLoginButton.value ? controller.login : null, child: const Text('Login')),
                           ),
                         ),
                       ],
