@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:surveyor_app/core/app_extensions.dart';
+import 'package:surveyor_app/db/app_get_storage.dart';
 import 'package:surveyor_app/features/home/home_screen.dart';
+import 'package:surveyor_app/repo/auth_repo.dart';
 
 class LoginController extends GetxController {
   final enableLoginButton = false.obs;
@@ -11,13 +14,25 @@ class LoginController extends GetxController {
     enableLoginButton.value = email.text.isEmail && password.text.isNotEmpty;
   }
 
-  void login() {
+  void login() async {
     final emailText = email.text;
     final passwordText = password.text;
 
-    // Implement your login logic here
+    AuthRepo authRepo = AuthRepo();
 
-    Get.offAllNamed(HomeScreen.routeName);
+    try {
+      final data = await authRepo.login(email: emailText, password: passwordText);
+      await AppGetStorage().write('token', data['token']);
+      Get.toNamed(HomeScreen.routeName);
+    } catch (e) {
+      Get.snackbar(
+        'Login Failed',
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        margin: EdgeInsets.only(bottom: 2.h),
+      );
+      return;
+    }
   }
 
   @override
@@ -25,5 +40,12 @@ class LoginController extends GetxController {
     super.onInit();
     email.addListener(_updateLoginButtonState);
     password.addListener(_updateLoginButtonState);
+  }
+
+  @override
+  void onClose() {
+    email.dispose();
+    password.dispose();
+    super.onClose();
   }
 }
