@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:surveyor_app/core/app_extensions.dart';
 import 'package:surveyor_app/db/app_get_storage.dart';
 import 'package:surveyor_app/features/home/home_screen.dart';
+import 'package:surveyor_app/models/user.dart';
 import 'package:surveyor_app/repo/auth_repo.dart';
 
 class LoginController extends GetxController {
@@ -22,7 +23,9 @@ class LoginController extends GetxController {
 
     try {
       final data = await authRepo.login(email: emailText, password: passwordText);
+      User user = User.fromJson(data);
       await AppGetStorage().write('token', data['token']);
+      await AppGetStorage().write('user', user.toJson());
       Get.toNamed(HomeScreen.routeName);
     } catch (e) {
       Get.snackbar(
