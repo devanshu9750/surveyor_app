@@ -7,6 +7,19 @@ class UserRepo extends GetConnect {
   static final UserRepo _instance = UserRepo._privateConstructor();
   factory UserRepo() => _instance;
 
+  Future<Map<String, dynamic>> addOrUpdateUser({required Map<String, dynamic> userData}) async {
+    final response = await post(AppApi.addOrUpdateUser, userData);
+
+    if (response.statusCode != 200) throw Exception('User save failed: ${response.body}');
+
+    Map<String, dynamic> data = response.body;
+    if (data['status'] == AppConstants.errorStatus) {
+      throw Exception('User save failed: ${data['message']}');
+    }
+
+    return response.body;
+  }
+
   Future<Map<String, dynamic>> getUsers({required List<int> userType, required int statusID}) async {
     final response = await post(AppApi.getUsers, {'user_type': userType, 'status_id': statusID});
 

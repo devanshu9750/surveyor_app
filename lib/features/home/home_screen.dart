@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(leading: const Icon(Icons.menu), title: Text("Admin - ${controller.user.value?.name ?? ''}"), elevation: 10),
           floatingActionButton: controller.bottomBarIndex.value == 0 && controller.user.value?.userType == AppConstants.adminUserTypeID
-              ? FloatingActionButton(onPressed: () => Get.toNamed('/add_user'), child: const Icon(Icons.add))
+              ? FloatingActionButton(onPressed: () => Get.toNamed('/add-user'), child: const Icon(Icons.add))
               : null,
           body: controller.user.value?.userType == AppConstants.adminUserTypeID
               ? Obx(() => IndexedStack(index: controller.bottomBarIndex.value, children: const [UsersListWidget(), SizedBox()]))
