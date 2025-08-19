@@ -12,7 +12,17 @@ class UsersListWidget extends StatelessWidget {
       builder: (controller) {
         return Column(
           children: [
-            const Spacer(),
+            Expanded(
+              child: Obx(
+                () => ListView.builder(
+                  itemCount: controller.userList.length,
+                  itemBuilder: (context, index) {
+                    final user = controller.userList[index];
+                    return ListTile(title: Text(user.name ?? ''), subtitle: Text(user.email ?? ''));
+                  },
+                ),
+              ),
+            ),
             Container(
               decoration: BoxDecoration(color: context.theme.primaryColor.withValues(alpha: 0.2)),
               child: Row(

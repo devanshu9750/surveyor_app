@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:surveyor_app/core/app_extensions.dart';
 import 'package:surveyor_app/db/app_get_storage.dart';
 import 'package:surveyor_app/features/home/home_screen.dart';
 import 'package:surveyor_app/models/user.dart';
@@ -28,12 +27,7 @@ class LoginController extends GetxController {
       await AppGetStorage().write('user', user.toJson());
       Get.toNamed(HomeScreen.routeName);
     } catch (e) {
-      Get.snackbar(
-        'Login Failed',
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-        margin: EdgeInsets.only(bottom: 2.h),
-      );
+      ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text('Login Failed: ${e.toString()}'), duration: const Duration(seconds: 3)));
       return;
     }
   }
