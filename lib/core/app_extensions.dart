@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-extension NumberExtension on int {
+extension NumberExtension on num {
   double get h {
     return MediaQuery.of(Get.context!).size.height * (this / 100);
   }

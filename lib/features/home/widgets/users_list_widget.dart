@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:surveyor_app/core/app_extensions.dart';
 import 'package:surveyor_app/features/home/widgets/users_list_controller.dart';
 
 class UsersListWidget extends StatelessWidget {
@@ -24,21 +25,22 @@ class UsersListWidget extends StatelessWidget {
               ),
             ),
             Container(
-              decoration: BoxDecoration(color: context.theme.primaryColor.withValues(alpha: 0.2)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.5.h),
+              width: double.infinity,
+              decoration: BoxDecoration(color: context.theme.primaryColor.withValues(alpha: 0.1)),
+              child: Wrap(
+                spacing: 2.w,
                 children: List.generate(
                   controller.userFilters.length,
                   (index) => Obx(
-                    () => Row(
-                      children: [
-                        Radio<String>(
-                          groupValue: controller.selectedUserFilter.value,
-                          value: controller.userFilters[index],
-                          onChanged: (value) => controller.toggleFilter(value!),
-                        ),
-                        Text(controller.userFilters[index]),
-                      ],
+                    () => ChoiceChip(
+                      label: Text(controller.userFilters[index]),
+                      selected: controller.selectedUserFilter.value == controller.userFilters[index],
+                      onSelected: (selected) {
+                        if (selected) {
+                          controller.toggleUserFilter(controller.userFilters[index]);
+                        }
+                      },
                     ),
                   ),
                 ),

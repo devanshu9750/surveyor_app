@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:surveyor_app/core/app_constants.dart';
 import 'package:surveyor_app/models/user.dart';
 import 'package:surveyor_app/repo/user_repo.dart';
 
@@ -8,13 +9,23 @@ class UsersListController extends GetxController {
   final selectedUserFilter = UserTypeFilter.all.obs;
   final userList = <User>[].obs;
 
-  void toggleFilter(String value) => selectedUserFilter.value = value;
+  void toggleUserFilter(String value) => selectedUserFilter.value = value;
 
-  void getUsers() async {
+  void _toggleUsers(String userType) {
+    if (userType == UserTypeFilter.all) {
+      _getUsers(userType: [AppConstants.staffUserTypeID, AppConstants.tpaUserTypeID]);
+    } else if (userType == UserTypeFilter.tpa) {
+      _getUsers(userType: [AppConstants.tpaUserTypeID]);
+    } else {
+      _getUsers(userType: [AppConstants.staffUserTypeID]);
+    }
+  }
+
+  void _getUsers({List<int> userType = const [2, 3]}) async {
     UserRepo userRepo = UserRepo();
 
     try {
-      var data = await userRepo.getUsers(userType: [1], statusID: 1);
+      var data = await userRepo.getUsers(userType: userType, statusID: 1);
       userList.value = (data['users'] as List).map((user) => User.fromJson(user)).toList();
     } catch (e) {
       ScaffoldMessenger.of(
@@ -26,7 +37,8 @@ class UsersListController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getUsers();
+    _getUsers();
+    selectedUserFilter.listen(_toggleUsers);
   }
 }
 
