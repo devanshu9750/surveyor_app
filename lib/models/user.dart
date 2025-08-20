@@ -10,6 +10,29 @@ class User {
 
   User({this.id, this.email, this.createdAt, this.updatedAt, this.name, this.statusId, this.userType, this.mobileNo});
 
+  factory User.copyWith(
+    User user, {
+    int? id,
+    String? email,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? name,
+    int? statusId,
+    int? userType,
+    int? mobileNo,
+  }) {
+    return User(
+      id: id ?? user.id,
+      email: email ?? user.email,
+      createdAt: createdAt ?? user.createdAt,
+      updatedAt: updatedAt ?? user.updatedAt,
+      name: name ?? user.name,
+      statusId: statusId ?? user.statusId,
+      userType: userType ?? user.userType,
+      mobileNo: mobileNo ?? user.mobileNo,
+    );
+  }
+
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'] as int?,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:surveyor_app/core/app_extensions.dart';
+import 'package:surveyor_app/features/addUpdateUser/add_update_user_screen.dart';
 import 'package:surveyor_app/features/home/widgets/users_list_controller.dart';
 
 class UsersListWidget extends StatelessWidget {
@@ -23,7 +24,10 @@ class UsersListWidget extends StatelessWidget {
                         itemCount: controller.userList.length,
                         itemBuilder: (context, index) {
                           final user = controller.userList[index];
-                          return ListTile(title: Text(user.name ?? ''), subtitle: Text(user.email ?? ''));
+                          return GestureDetector(
+                            onTap: () => Get.toNamed(AddUpdateUserScreen.routeName, arguments: user),
+                            child: ListTile(title: Text(user.name ?? ''), subtitle: Text(user.email ?? '')),
+                          );
                         },
                       ),
               ),

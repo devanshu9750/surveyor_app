@@ -14,7 +14,7 @@ class AddUpdateUserScreen extends StatelessWidget {
       init: AddUpdateUserController(),
       builder: (controller) {
         return Scaffold(
-          appBar: AppBar(title: const Text('Add User'), elevation: 10),
+          appBar: AppBar(title: controller.user.value.id != null ? const Text('Update User') : const Text('Add User'), elevation: 10),
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
             child: Column(
@@ -48,18 +48,22 @@ class AddUpdateUserScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 2.h),
                 DropdownButtonFormField<int>(
+                  value: controller.userType.value,
                   decoration: const InputDecoration(labelText: 'User Type', border: OutlineInputBorder()),
                   items: const [
                     DropdownMenuItem(value: AppConstants.staffUserTypeID, child: Text(AppConstants.staffUserTypeName)),
                     DropdownMenuItem(value: AppConstants.tpaUserTypeID, child: Text(AppConstants.tpaUserTypeName)),
                   ],
-                  onChanged: (value) => controller.userType.value = value ?? -1,
+                  onChanged: (value) => controller.userType.value = value ?? 2,
                 ),
                 const Spacer(),
                 SizedBox(
                   width: double.infinity,
                   child: Obx(
-                    () => FilledButton(onPressed: controller.enableAddUpdateButton.value ? controller.addUpdateUser : null, child: const Text('Add')),
+                    () => FilledButton(
+                      onPressed: controller.enableAddUpdateButton.value ? controller.addUpdateUser : null,
+                      child: controller.user.value.id != null ? const Text('Update') : const Text('Add'),
+                    ),
                   ),
                 ),
               ],

@@ -30,6 +30,7 @@ class UsersListController extends GetxController {
       final data = await userRepo.getUsers(userType: userType, statusID: 1);
       userList.value = (data['users'] as List).map((user) => User.fromJson(user)).toList();
     } catch (e) {
+      userList.clear();
       ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text('Failed to load users: ${e.toString()}')));
     } finally {
       isLoading.value = false;

@@ -6,11 +6,12 @@ import 'package:surveyor_app/models/user.dart';
 import 'package:surveyor_app/repo/user_repo.dart';
 
 class AddUpdateUserController extends GetxController {
+  final arguments = Get.arguments;
   final name = TextEditingController();
   final phone = TextEditingController();
   final email = TextEditingController();
   final password = TextEditingController();
-  final userType = (-1).obs;
+  final userType = 2.obs;
   final user = User().obs;
   final enableAddUpdateButton = false.obs;
 
@@ -20,16 +21,25 @@ class AddUpdateUserController extends GetxController {
         phone.text.isNumericOnly &&
         phone.text.length == 10 &&
         email.text.isEmail &&
-        password.text.isNotEmpty &&
-        userType.value != -1;
+        (password.text.isNotEmpty || user.value.id != null);
   }
 
   void addUpdateUser() async {
-    user.value = User(name: name.text, mobileNo: int.tryParse(phone.text), email: email.text, userType: userType.value);
+    if (user.value.id == null) {
+      user.value = User(
+        name: name.text,
+        mobileNo: int.tryParse(phone.text),
+        email: email.text,
+        userType: userType.value,
+        statusId: AppConstants.userStatusPublished,
+      );
+    } else {
+      user.value = User.copyWith(user.value, name: name.text, mobileNo: int.tryParse(phone.text), email: email.text, userType: userType.value);
+    }
 
     try {
       UserRepo userRepo = UserRepo();
-      await userRepo.addOrUpdateUser(userData: {...user.toJson(), "password": password.text, "status_id": AppConstants.userStatusPublished});
+      await userRepo.addOrUpdateUser(userData: {...user.toJson(), if (password.text.isNotEmpty) "password": password.text});
       if (Get.isRegistered<UsersListController>()) Get.find<UsersListController>().getUsers();
       Get.back();
     } catch (e) {
@@ -40,6 +50,14 @@ class AddUpdateUserController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    if (arguments != null && arguments is User) {
+      user.value = arguments as User;
+      name.text = user.value.name ?? '';
+      phone.text = user.value.mobileNo?.toString() ?? '';
+      email.text = user.value.email ?? '';
+      userType.value = user.value.userType ?? 2;
+      _updateAddUpdateButtonState();
+    }
     name.addListener(_updateAddUpdateButtonState);
     phone.addListener(_updateAddUpdateButtonState);
     email.addListener(_updateAddUpdateButtonState);
