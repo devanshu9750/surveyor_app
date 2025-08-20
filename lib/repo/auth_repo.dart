@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:surveyor_app/core/api_request.dart';
 import 'package:surveyor_app/core/app_api.dart';
 import 'package:surveyor_app/core/app_constants.dart';
 
@@ -8,7 +9,7 @@ class AuthRepo extends GetConnect {
   factory AuthRepo() => _instance;
 
   Future<Map<String, dynamic>> login({required String email, required String password}) async {
-    final response = await post(AppApi.requestAccountAccess, {'email': email, 'password': password});
+    final response = await ApiRequest().postRequest(AppApi.requestAccountAccess, {'email': email, 'password': password});
 
     if (response.statusCode != 200) throw Exception('Login failed: ${response.body}');
 

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:surveyor_app/core/api_request.dart';
 import 'package:surveyor_app/core/app_api.dart';
 import 'package:surveyor_app/core/app_constants.dart';
 
@@ -8,7 +9,7 @@ class UserRepo extends GetConnect {
   factory UserRepo() => _instance;
 
   Future<Map<String, dynamic>> addOrUpdateUser({required Map<String, dynamic> userData}) async {
-    final response = await post(AppApi.addOrUpdateUser, userData);
+    final response = await ApiRequest().postRequest(AppApi.addOrUpdateUser, userData);
 
     if (response.statusCode != 200) throw Exception('User save failed: ${response.body}');
 
@@ -21,7 +22,7 @@ class UserRepo extends GetConnect {
   }
 
   Future<Map<String, dynamic>> getUsers({required List<int> userType, required int statusID}) async {
-    final response = await post(AppApi.getUsers, {'user_type': userType, 'status_id': statusID});
+    final response = await ApiRequest().postRequest(AppApi.getUsers, {'user_type': userType, 'status_id': statusID});
 
     if (response.statusCode != 200) throw Exception('Get users failed: ${response.body}');
 
