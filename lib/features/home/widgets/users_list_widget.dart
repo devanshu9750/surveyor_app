@@ -15,13 +15,17 @@ class UsersListWidget extends StatelessWidget {
           children: [
             Expanded(
               child: Obx(
-                () => ListView.builder(
-                  itemCount: controller.userList.length,
-                  itemBuilder: (context, index) {
-                    final user = controller.userList[index];
-                    return ListTile(title: Text(user.name ?? ''), subtitle: Text(user.email ?? ''));
-                  },
-                ),
+                () => controller.isLoading.value
+                    ? const Center(child: CircularProgressIndicator())
+                    : controller.userFilters.isEmpty
+                    ? const Center(child: Text("No users found"))
+                    : ListView.builder(
+                        itemCount: controller.userList.length,
+                        itemBuilder: (context, index) {
+                          final user = controller.userList[index];
+                          return ListTile(title: Text(user.name ?? ''), subtitle: Text(user.email ?? ''));
+                        },
+                      ),
               ),
             ),
             Container(
