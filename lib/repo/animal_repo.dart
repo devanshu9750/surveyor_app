@@ -7,8 +7,8 @@ class AnimalRepo {
   factory AnimalRepo() => _instance;
   AnimalRepo._internal();
 
-  Future<void> addOrUpdateAnimal(Map<String, dynamic> animalData) async {
-    final response = await ApiRequest().post(AppApi.addOrUpdateAnimal, animalData);
+  Future<Map<String, dynamic>> addOrUpdateAnimal(Map<String, dynamic> animalData) async {
+    final response = await ApiRequest().postRequest(AppApi.addOrUpdateAnimal, animalData);
 
     if (response.statusCode != 200) throw Exception('Animal save failed: ${response.body}');
 
@@ -17,6 +17,19 @@ class AnimalRepo {
       throw Exception('Animal save failed: ${data['message']}');
     }
 
-    return response.body;
+    return data['contents'];
+  }
+
+  Future<Map<String, dynamic>> getAnimals({int page = 1}) async {
+    final response = await ApiRequest().postRequest(AppApi.getAllAnimals, {'page': page});
+
+    if (response.statusCode != 200) throw Exception('Failed to load animals: ${response.body}');
+
+    Map<String, dynamic> data = response.body;
+    if (data['status'] == AppConstants.errorStatus) {
+      throw Exception('Failed to load animals: ${data['message']}');
+    }
+
+    return data['contents'];
   }
 }

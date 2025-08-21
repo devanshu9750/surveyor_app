@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:surveyor_app/core/app_extensions.dart';
 import 'package:surveyor_app/features/addUpdateUser/add_update_user_screen.dart';
-import 'package:surveyor_app/features/home/widgets/users_list_controller.dart';
+import 'package:surveyor_app/features/home/widgets/users_list/users_list_controller.dart';
 
 class UsersListWidget extends StatelessWidget {
   const UsersListWidget({super.key});

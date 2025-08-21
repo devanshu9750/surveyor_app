@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:surveyor_app/features/home/widgets/animals_list/animal_list_controller.dart';
 import 'package:surveyor_app/models/animal.dart';
 import 'package:surveyor_app/repo/animal_repo.dart';
 
 class AddUpdateAnimalController extends GetxController {
+  final arguments = Get.arguments;
   final tagNumber = TextEditingController();
   final ownerName = TextEditingController();
   final village = TextEditingController();
@@ -15,19 +17,37 @@ class AddUpdateAnimalController extends GetxController {
   final animal = Animal().obs;
 
   void addUpdateAnimal() async {
-    animal.value = Animal(
-      tagNumber: tagNumber.text,
-      ownerName: ownerName.text,
-      village: village.text,
-      taluka: taluka.text,
-      pincode: pincode.text,
-      sumInsured: int.tryParse(sumInsured.text),
-      policyDate: DateTime.tryParse(policyDate.text),
-    );
+    if (animal.value.id == null) {
+      animal.value = Animal(
+        tagNumber: tagNumber.text,
+        ownerName: ownerName.text,
+        village: village.text,
+        taluka: taluka.text,
+        pincode: pincode.text,
+        sumInsured: int.tryParse(sumInsured.text),
+        policyDate: DateTime.tryParse(policyDate.text),
+      );
+    } else {
+      animal.value = Animal.copyWith(
+        animal.value,
+        tagNumber: tagNumber.text,
+        ownerName: ownerName.text,
+        village: village.text,
+        taluka: taluka.text,
+        pincode: pincode.text,
+        sumInsured: int.tryParse(sumInsured.text),
+        policyDate: DateTime.tryParse(policyDate.text),
+      );
+    }
 
     try {
       AnimalRepo animalRepo = AnimalRepo();
       await animalRepo.addOrUpdateAnimal(animal.value.toJson());
+      if (Get.isRegistered<AnimalListController>()) {
+        Get.find<AnimalListController>()
+          ..page.value = 1
+          ..getAnimals();
+      }
       Get.back();
     } catch (e) {
       ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text('Failed to save animal data')));
@@ -61,6 +81,16 @@ class AddUpdateAnimalController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    if (arguments != null && arguments is Animal) {
+      animal.value = arguments as Animal;
+      tagNumber.text = animal.value.tagNumber ?? '';
+      ownerName.text = animal.value.ownerName ?? '';
+      village.text = animal.value.village ?? '';
+      taluka.text = animal.value.taluka ?? '';
+      pincode.text = animal.value.pincode ?? '';
+      sumInsured.text = animal.value.sumInsured?.toString() ?? '';
+      policyDate.text = animal.value.policyDate?.toLocal().toString().split(' ')[0] ?? '';
+    }
     tagNumber.addListener(_updateAddUpdateButtonState);
     ownerName.addListener(_updateAddUpdateButtonState);
     village.addListener(_updateAddUpdateButtonState);

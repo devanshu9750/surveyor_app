@@ -4,7 +4,8 @@ import 'package:surveyor_app/core/app_constants.dart';
 import 'package:surveyor_app/features/addUpdateAnimal/add_update_animal_screen.dart';
 import 'package:surveyor_app/features/addUpdateUser/add_update_user_screen.dart';
 import 'package:surveyor_app/features/home/home_controller.dart';
-import 'package:surveyor_app/features/home/widgets/users_list_widget.dart';
+import 'package:surveyor_app/features/home/widgets/animals_list/animal_list_widget.dart';
+import 'package:surveyor_app/features/home/widgets/users_list/users_list_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -28,7 +29,7 @@ class HomeScreen extends StatelessWidget {
                 )
               : null,
           body: controller.user.value?.userType == AppConstants.adminUserTypeID
-              ? Obx(() => IndexedStack(index: controller.bottomBarIndex.value, children: const [UsersListWidget(), SizedBox()]))
+              ? Obx(() => IndexedStack(index: controller.bottomBarIndex.value, children: const [UsersListWidget(), AnimalListWidget()]))
               : const SizedBox(),
           bottomNavigationBar: controller.user.value?.userType == AppConstants.adminUserTypeID
               ? Obx(

@@ -14,7 +14,7 @@ class AddUpdateAnimalScreen extends StatelessWidget {
       init: AddUpdateAnimalController(),
       builder: (controller) {
         return Scaffold(
-          appBar: AppBar(title: const Text('Add/Update Animal'), elevation: 10),
+          appBar: AppBar(title: controller.animal.value.id == null ? const Text("Add Animal") : const Text('Update Animal'), elevation: 10),
           body: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -84,7 +84,7 @@ class AddUpdateAnimalScreen extends StatelessWidget {
                   child: Obx(
                     () => FilledButton(
                       onPressed: controller.enableAddUpdateButton.value ? controller.addUpdateAnimal : null,
-                      child: const Text('Submit'),
+                      child: controller.animal.value.id == null ? const Text('Add') : const Text('Update'),
                     ),
                   ),
                 ),

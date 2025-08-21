@@ -18,7 +18,7 @@ class UserRepo extends GetConnect {
       throw Exception('User removal failed: ${data['message']}');
     }
 
-    return response.body;
+    return data['contents'];
   }
 
   Future<Map<String, dynamic>> addOrUpdateUser({required Map<String, dynamic> userData}) async {
@@ -31,7 +31,7 @@ class UserRepo extends GetConnect {
       throw Exception('User save failed: ${data['message']}');
     }
 
-    return response.body;
+    return data['contents'];
   }
 
   Future<Map<String, dynamic>> getUsers({required List<int> userType, required int statusID}) async {

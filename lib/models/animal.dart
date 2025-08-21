@@ -31,6 +31,41 @@ class Animal {
     this.isClaimProcessedFromTPA,
   });
 
+  factory Animal.copyWith(
+    Animal? animal, {
+    int? id,
+    String? tagNumber,
+    String? ownerName,
+    String? village,
+    String? taluka,
+    String? pincode,
+    int? sumInsured,
+    DateTime? policyDate,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    int? staffId,
+    bool? isSpotInitiated,
+    bool? isSpotCompleted,
+    bool? isClaimProcessedFromTPA,
+  }) {
+    return Animal(
+      id: id ?? animal?.id,
+      tagNumber: tagNumber ?? animal?.tagNumber,
+      ownerName: ownerName ?? animal?.ownerName,
+      village: village ?? animal?.village,
+      taluka: taluka ?? animal?.taluka,
+      pincode: pincode ?? animal?.pincode,
+      sumInsured: sumInsured ?? animal?.sumInsured,
+      policyDate: policyDate ?? animal?.policyDate,
+      createdAt: createdAt ?? animal?.createdAt,
+      updatedAt: updatedAt ?? animal?.updatedAt,
+      staffId: staffId ?? animal?.staffId,
+      isSpotInitiated: isSpotInitiated ?? animal?.isSpotInitiated,
+      isSpotCompleted: isSpotCompleted ?? animal?.isSpotCompleted,
+      isClaimProcessedFromTPA: isClaimProcessedFromTPA ?? animal?.isClaimProcessedFromTPA,
+    );
+  }
+
   factory Animal.fromJson(Map<String, dynamic> json) {
     return Animal(
       id: json['id'],
@@ -49,6 +84,8 @@ class Animal {
       isClaimProcessedFromTPA: json['is_claim_processed_from_tpa'] ?? false,
     );
   }
+
+  get species => null;
 
   Map<String, dynamic> toJson() {
     return {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:surveyor_app/core/app_constants.dart';
-import 'package:surveyor_app/features/home/widgets/users_list_controller.dart';
+import 'package:surveyor_app/features/home/widgets/users_list/users_list_controller.dart';
 import 'package:surveyor_app/models/user.dart';
 import 'package:surveyor_app/repo/user_repo.dart';
 
