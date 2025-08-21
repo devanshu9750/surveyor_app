@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:surveyor_app/models/animal.dart';
+import 'package:surveyor_app/repo/animal_repo.dart';
 
 class AddUpdateAnimalController extends GetxController {
   final tagNumber = TextEditingController();
@@ -10,8 +12,27 @@ class AddUpdateAnimalController extends GetxController {
   final sumInsured = TextEditingController();
   final policyDate = TextEditingController();
   final enableAddUpdateButton = false.obs;
+  final animal = Animal().obs;
 
-  void addUpdateAnimal() {}
+  void addUpdateAnimal() async {
+    animal.value = Animal(
+      tagNumber: tagNumber.text,
+      ownerName: ownerName.text,
+      village: village.text,
+      taluka: taluka.text,
+      pincode: pincode.text,
+      sumInsured: int.tryParse(sumInsured.text),
+      policyDate: DateTime.tryParse(policyDate.text),
+    );
+
+    try {
+      AnimalRepo animalRepo = AnimalRepo();
+      await animalRepo.addOrUpdateAnimal(animal.value.toJson());
+      Get.back();
+    } catch (e) {
+      ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text('Failed to save animal data')));
+    }
+  }
 
   void _updateAddUpdateButtonState() {
     enableAddUpdateButton.value =
@@ -19,8 +40,8 @@ class AddUpdateAnimalController extends GetxController {
         ownerName.text.isNotEmpty &&
         village.text.isNotEmpty &&
         taluka.text.isNotEmpty &&
-        pincode.text.isNotEmpty &&
-        sumInsured.text.isNotEmpty &&
+        pincode.text.isNumericOnly &&
+        sumInsured.text.isNum &&
         policyDate.text.isNotEmpty;
   }
 
@@ -47,5 +68,17 @@ class AddUpdateAnimalController extends GetxController {
     pincode.addListener(_updateAddUpdateButtonState);
     sumInsured.addListener(_updateAddUpdateButtonState);
     policyDate.addListener(_updateAddUpdateButtonState);
+  }
+
+  @override
+  void onClose() {
+    tagNumber.dispose();
+    ownerName.dispose();
+    village.dispose();
+    taluka.dispose();
+    pincode.dispose();
+    sumInsured.dispose();
+    policyDate.dispose();
+    super.onClose();
   }
 }
