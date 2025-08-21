@@ -18,7 +18,7 @@ class UsersListWidget extends StatelessWidget {
               child: Obx(
                 () => controller.isLoading.value
                     ? const Center(child: CircularProgressIndicator())
-                    : controller.userFilters.isEmpty
+                    : controller.userList.isEmpty
                     ? const Center(child: Text("No users found"))
                     : ListView.builder(
                         itemCount: controller.userList.length,
