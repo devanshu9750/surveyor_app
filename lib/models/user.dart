@@ -58,4 +58,10 @@ class User {
       'mobile_no': mobileNo,
     };
   }
+
+  @override
+  bool operator ==(Object other) => other is User && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

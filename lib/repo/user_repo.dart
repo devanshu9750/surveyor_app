@@ -8,6 +8,19 @@ class UserRepo extends GetConnect {
   static final UserRepo _instance = UserRepo._privateConstructor();
   factory UserRepo() => _instance;
 
+  Future<Map<String, dynamic>> removeUser({required Map<String, dynamic> userData}) async {
+    final response = await ApiRequest().postRequest(AppApi.addOrUpdateUser, userData);
+
+    if (response.statusCode != 200) throw Exception('User removal failed: ${response.body}');
+
+    Map<String, dynamic> data = response.body;
+    if (data['status'] == AppConstants.errorStatus) {
+      throw Exception('User removal failed: ${data['message']}');
+    }
+
+    return response.body;
+  }
+
   Future<Map<String, dynamic>> addOrUpdateUser({required Map<String, dynamic> userData}) async {
     final response = await ApiRequest().postRequest(AppApi.addOrUpdateUser, userData);
 

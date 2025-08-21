@@ -26,7 +26,14 @@ class UsersListWidget extends StatelessWidget {
                           final user = controller.userList[index];
                           return GestureDetector(
                             onTap: () => Get.toNamed(AddUpdateUserScreen.routeName, arguments: user),
-                            child: ListTile(title: Text(user.name ?? ''), subtitle: Text(user.email ?? '')),
+                            child: ListTile(
+                              title: Text(user.name ?? ''),
+                              subtitle: Text(user.email ?? ''),
+                              trailing: IconButton(
+                                onPressed: () => controller.showRemoveUserDialogue(user),
+                                icon: const Icon(Icons.delete_outline_rounded),
+                              ),
+                            ),
                           );
                         },
                       ),

@@ -10,6 +10,42 @@ class UsersListController extends GetxController {
   final userList = <User>[].obs;
   final isLoading = true.obs;
 
+  void _removeUser(User user) async {
+    try {
+      UserRepo userRepo = UserRepo();
+      final removedUser = User.copyWith(user, statusId: 2);
+      await userRepo.removeUser(userData: removedUser.toJson());
+      userList.remove(user);
+    } catch (e) {
+      userList.clear();
+      ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text('Failed to load users: ${e.toString()}')));
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void showRemoveUserDialogue(User user) {
+    showDialog(
+      context: Get.context!,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Remove User"),
+          content: Text("Are you sure you want to remove ${user.name}?"),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                _removeUser(user);
+                Get.back();
+              },
+              child: Text("Yes"),
+            ),
+            ElevatedButton(onPressed: () => Get.back(), child: Text("No")),
+          ],
+        );
+      },
+    );
+  }
+
   void toggleUserFilter(String value) => selectedUserFilter.value = value;
 
   void _toggleUsers(String userType) {
