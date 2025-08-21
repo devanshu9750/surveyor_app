@@ -74,6 +74,16 @@ class AddUpdateAnimalScreen extends StatelessWidget {
                               ),
                             ),
                           ),
+                          SizedBox(height: 2.h),
+                          DropdownButtonFormField<int>(
+                            value: controller.staffID.value == -1 ? null : controller.staffID.value,
+                            decoration: const InputDecoration(labelText: 'Staff', border: OutlineInputBorder()),
+                            items: List.generate(controller.staffList.length, (index) {
+                              final user = controller.staffList[index];
+                              return DropdownMenuItem(value: user.id, child: Text(user.name ?? ''));
+                            }),
+                            onChanged: (value) => controller.staffID.value = value ?? -1,
+                          ),
                         ],
                       ),
                     ),

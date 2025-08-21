@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:surveyor_app/core/app_constants.dart';
 import 'package:surveyor_app/features/home/widgets/animals_list/animal_list_controller.dart';
+import 'package:surveyor_app/features/home/widgets/users_list/users_list_controller.dart';
 import 'package:surveyor_app/models/animal.dart';
+import 'package:surveyor_app/models/user.dart';
 import 'package:surveyor_app/repo/animal_repo.dart';
 
 class AddUpdateAnimalController extends GetxController {
@@ -15,6 +18,8 @@ class AddUpdateAnimalController extends GetxController {
   final policyDate = TextEditingController();
   final enableAddUpdateButton = false.obs;
   final animal = Animal().obs;
+  final staffID = (-1).obs;
+  final staffList = <User>[].obs;
 
   void addUpdateAnimal() async {
     if (animal.value.id == null) {
@@ -42,7 +47,7 @@ class AddUpdateAnimalController extends GetxController {
 
     try {
       AnimalRepo animalRepo = AnimalRepo();
-      await animalRepo.addOrUpdateAnimal(animal.value.toJson());
+      await animalRepo.addOrUpdateAnimal({...animal.value.toJson(), if (staffID.value != -1) 'staff_id': staffID.value});
       if (Get.isRegistered<AnimalListController>()) {
         Get.find<AnimalListController>()
           ..page.value = 1
@@ -90,6 +95,8 @@ class AddUpdateAnimalController extends GetxController {
       pincode.text = animal.value.pincode ?? '';
       sumInsured.text = animal.value.sumInsured?.toString() ?? '';
       policyDate.text = animal.value.policyDate?.toLocal().toString().split(' ')[0] ?? '';
+      staffID.value = animal.value.staffId ?? -1;
+      _updateAddUpdateButtonState();
     }
     tagNumber.addListener(_updateAddUpdateButtonState);
     ownerName.addListener(_updateAddUpdateButtonState);
@@ -98,6 +105,9 @@ class AddUpdateAnimalController extends GetxController {
     pincode.addListener(_updateAddUpdateButtonState);
     sumInsured.addListener(_updateAddUpdateButtonState);
     policyDate.addListener(_updateAddUpdateButtonState);
+    if (Get.isRegistered<UsersListController>()) {
+      staffList.value = Get.find<UsersListController>().userList.where((user) => user.userType == AppConstants.staffUserTypeID).toList();
+    }
   }
 
   @override
