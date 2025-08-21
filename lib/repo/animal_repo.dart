@@ -7,6 +7,19 @@ class AnimalRepo {
   factory AnimalRepo() => _instance;
   AnimalRepo._internal();
 
+  Future<Map<String, dynamic>> initiateSpot({required int id}) async {
+    final response = await ApiRequest().postRequest(AppApi.initiateSpotForAnimal, {'id': id});
+
+    if (response.statusCode != 200) throw Exception('Failed to initiate spot: ${response.body}');
+
+    Map<String, dynamic> data = response.body;
+    if (data['status'] == AppConstants.errorStatus) {
+      throw Exception('Failed to initiate spot: ${data['message']}');
+    }
+
+    return data['contents'];
+  }
+
   Future<Map<String, dynamic>> addOrUpdateAnimal(Map<String, dynamic> animalData) async {
     final response = await ApiRequest().postRequest(AppApi.addOrUpdateAnimal, animalData);
 

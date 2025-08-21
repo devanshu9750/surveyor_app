@@ -8,6 +8,20 @@ class AnimalListController extends GetxController {
   final isLoading = true.obs;
   final animalList = <Animal>[].obs;
 
+  void initiateSpot(int id) async {
+    AnimalRepo animalRepo = AnimalRepo();
+
+    try {
+      await animalRepo.initiateSpot(id: id);
+      int index = animalList.indexWhere((animal) => animal.id == id);
+      if (index != -1) {
+        animalList[index] = Animal.copyWith(animalList[index], isSpotInitiated: true);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text('Error initiating spot: $e')));
+    }
+  }
+
   void getAnimals() async {
     AnimalRepo animalRepo = AnimalRepo();
 

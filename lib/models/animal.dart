@@ -105,4 +105,10 @@ class Animal {
       'is_claim_processed_from_tpa': isClaimProcessedFromTPA,
     };
   }
+
+  @override
+  bool operator ==(Object other) => other is Animal && other.id == id;
+
+  @override
+  int get hashCode => id ?? -1;
 }
