@@ -6,7 +6,22 @@ import 'package:surveyor_app/repo/animal_repo.dart';
 class AnimalListController extends GetxController {
   final page = 1.obs;
   final isLoading = true.obs;
+  final allAnimals = <Animal>[].obs;
   final animalList = <Animal>[].obs;
+  final animalFilters = [AnimalFilterType.all, AnimalFilterType.assigned, AnimalFilterType.unassigned];
+  final selectedAnimalFilter = AnimalFilterType.all.obs;
+
+  void toggleAnimalFilter(String value) => selectedAnimalFilter.value = value;
+
+  void _toggleAnimals(String animalFilterType) {
+    if (animalFilterType == AnimalFilterType.all) {
+      animalList.value = allAnimals;
+    } else if (animalFilterType == AnimalFilterType.assigned) {
+      animalList.value = allAnimals.where((animal) => animal.staffId != null).toList();
+    } else {
+      animalList.value = allAnimals.where((animal) => animal.staffId == null).toList();
+    }
+  }
 
   void initiateSpot(int id) async {
     AnimalRepo animalRepo = AnimalRepo();
@@ -29,12 +44,12 @@ class AnimalListController extends GetxController {
       isLoading.value = true;
       final data = await animalRepo.getAnimals(page: page.value);
       if (page.value == 1) {
-        animalList.value = (data['animals'] as List).map((e) => Animal.fromJson(e)).toList();
+        allAnimals.value = (data['animals'] as List).map((e) => Animal.fromJson(e)).toList();
       } else {
-        animalList.addAll((data['animals'] as List).map((e) => Animal.fromJson(e)).toList());
+        allAnimals.addAll((data['animals'] as List).map((e) => Animal.fromJson(e)).toList());
       }
+      _toggleAnimals(selectedAnimalFilter.value);
     } catch (e) {
-      animalList.clear();
       ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text('Error fetching animals: $e')));
     } finally {
       isLoading.value = false;
@@ -45,5 +60,12 @@ class AnimalListController extends GetxController {
   void onInit() {
     super.onInit();
     getAnimals();
+    selectedAnimalFilter.listen(_toggleAnimals);
   }
+}
+
+sealed class AnimalFilterType {
+  static const String all = 'All';
+  static const String assigned = 'Assigned';
+  static const String unassigned = 'Unassigned';
 }
