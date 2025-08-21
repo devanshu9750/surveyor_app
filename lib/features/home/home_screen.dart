@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:surveyor_app/core/app_constants.dart';
+import 'package:surveyor_app/features/addUpdateAnimal/add_update_animal_screen.dart';
+import 'package:surveyor_app/features/addUpdateUser/add_update_user_screen.dart';
 import 'package:surveyor_app/features/home/home_controller.dart';
 import 'package:surveyor_app/features/home/widgets/users_list_widget.dart';
 
@@ -15,8 +17,15 @@ class HomeScreen extends StatelessWidget {
       builder: (controller) {
         return Scaffold(
           appBar: AppBar(leading: const Icon(Icons.menu), title: Text("Admin - ${controller.user.value?.name ?? ''}"), elevation: 10),
-          floatingActionButton: controller.bottomBarIndex.value == 0 && controller.user.value?.userType == AppConstants.adminUserTypeID
-              ? FloatingActionButton(onPressed: () => Get.toNamed('/add-user'), child: const Icon(Icons.add))
+          floatingActionButton: controller.user.value?.userType == AppConstants.adminUserTypeID
+              ? FloatingActionButton(
+                  onPressed: () => controller.bottomBarIndex.value == 0
+                      ? Get.toNamed(AddUpdateUserScreen.routeName)
+                      : controller.bottomBarIndex.value == 1
+                      ? Get.toNamed(AddUpdateAnimalScreen.routeName)
+                      : null,
+                  child: const Icon(Icons.add),
+                )
               : null,
           body: controller.user.value?.userType == AppConstants.adminUserTypeID
               ? Obx(() => IndexedStack(index: controller.bottomBarIndex.value, children: const [UsersListWidget(), SizedBox()]))
