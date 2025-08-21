@@ -7,6 +7,7 @@ import 'package:surveyor_app/repo/user_repo.dart';
 class UsersListController extends GetxController {
   final userFilters = [UserTypeFilter.all, UserTypeFilter.staff, UserTypeFilter.tpa];
   final selectedUserFilter = UserTypeFilter.all.obs;
+  final allUsers = <User>[].obs;
   final userList = <User>[].obs;
   final isLoading = true.obs;
 
@@ -50,21 +51,22 @@ class UsersListController extends GetxController {
 
   void _toggleUsers(String userType) {
     if (userType == UserTypeFilter.all) {
-      getUsers(userType: [AppConstants.staffUserTypeID, AppConstants.tpaUserTypeID]);
+      userList.value = allUsers;
     } else if (userType == UserTypeFilter.tpa) {
-      getUsers(userType: [AppConstants.tpaUserTypeID]);
+      userList.value = allUsers.where((user) => user.userType == AppConstants.tpaUserTypeID).toList();
     } else {
-      getUsers(userType: [AppConstants.staffUserTypeID]);
+      userList.value = allUsers.where((user) => user.userType == AppConstants.staffUserTypeID).toList();
     }
   }
 
-  void getUsers({List<int> userType = const [2, 3]}) async {
+  void getUsers({List<int> userType = const [AppConstants.staffUserTypeID, AppConstants.tpaUserTypeID]}) async {
     UserRepo userRepo = UserRepo();
 
     try {
       isLoading.value = true;
       final data = await userRepo.getUsers(userType: userType, statusID: 1);
-      userList.value = (data['users'] as List).map((user) => User.fromJson(user)).toList();
+      allUsers.value = (data['users'] as List).map((user) => User.fromJson(user)).toList();
+      userList.value = allUsers;
     } catch (e) {
       userList.clear();
       ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text('Failed to load users: ${e.toString()}')));
