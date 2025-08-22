@@ -16,6 +16,15 @@ class HomeController extends GetxController {
 
   bool get isAdmin => user.value?.userType == AppConstants.adminUserTypeID;
 
+  bool get isStaff => user.value?.userType == AppConstants.staffUserTypeID;
+
+  bool get isTPA => user.value?.userType == AppConstants.tpaUserTypeID;
+
+  void logout() {
+    AppGetStorage().clear();
+    Get.offAllNamed('/login');
+  }
+
   void searchedAnimalTap(Animal animal) {
     Get
       ..back()

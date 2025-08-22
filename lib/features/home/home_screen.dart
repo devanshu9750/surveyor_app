@@ -18,9 +18,30 @@ class HomeScreen extends StatelessWidget {
       init: HomeController(),
       builder: (controller) {
         return Scaffold(
+          drawer: Drawer(
+            child: Column(
+              children: [
+                DrawerHeader(
+                  child: Center(
+                    child: controller.isAdmin
+                        ? Text('Admin - ${controller.user.value?.name ?? ''}')
+                        : controller.isStaff
+                        ? Text('Staff - ${controller.user.value?.name ?? ''}')
+                        : Text('TPA - ${controller.user.value?.name ?? ''}'),
+                  ),
+                ),
+                ListTile(leading: const Icon(Icons.logout), title: const Text('Logout'), onTap: () => controller.logout()),
+              ],
+            ),
+          ),
           appBar: AppBar(
-            leading: const Icon(Icons.menu),
-            title: Text("Admin - ${controller.user.value?.name ?? ''}"),
+            title: Text(
+              "${controller.isAdmin
+                  ? "Admin"
+                  : controller.isStaff
+                  ? "Staff"
+                  : "TPA"} - ${controller.user.value?.name ?? ''}",
+            ),
             actions: [
               Obx(
                 () => controller.bottomBarIndex.value == 1
