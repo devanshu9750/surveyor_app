@@ -14,7 +14,7 @@ class AddUpdateUserScreen extends StatelessWidget {
       init: AddUpdateUserController(),
       builder: (controller) {
         return Scaffold(
-          appBar: AppBar(title: controller.user.value.id != null ? const Text('Update User') : const Text('Add User'), elevation: 10),
+          appBar: AppBar(title: controller.user.value.id != null ? const Text('Update User') : const Text('Add User')),
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
             child: Column(

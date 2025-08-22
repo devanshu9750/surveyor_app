@@ -14,7 +14,7 @@ class AddUpdateAnimalScreen extends StatelessWidget {
       init: AddUpdateAnimalController(),
       builder: (controller) {
         return Scaffold(
-          appBar: AppBar(title: controller.animal.value.id == null ? const Text("Add Animal") : const Text('Update Animal'), elevation: 10),
+          appBar: AppBar(title: controller.animal.value.id == null ? const Text("Add Animal") : const Text('Update Animal')),
           body: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
