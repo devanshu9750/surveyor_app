@@ -6,6 +6,7 @@ import 'package:surveyor_app/features/addUpdateUser/add_update_user_screen.dart'
 import 'package:surveyor_app/features/home/home_controller.dart';
 import 'package:surveyor_app/features/home/widgets/animals_list/animal_list_controller.dart';
 import 'package:surveyor_app/features/home/widgets/animals_list/animal_list_widget.dart';
+import 'package:surveyor_app/features/home/widgets/staff_animal_list/staff_animal_list_widget.dart';
 import 'package:surveyor_app/features/home/widgets/users_list/users_list_widget.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -110,6 +111,8 @@ class HomeScreen extends StatelessWidget {
               : null,
           body: controller.isAdmin
               ? Obx(() => IndexedStack(index: controller.bottomBarIndex.value, children: const [UsersListWidget(), AnimalListWidget()]))
+              : controller.isStaff
+              ? StaffAnimalListWidget()
               : const SizedBox(),
           bottomNavigationBar: controller.isAdmin
               ? Obx(

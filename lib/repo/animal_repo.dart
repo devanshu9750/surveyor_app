@@ -33,8 +33,12 @@ class AnimalRepo {
     return data['contents'];
   }
 
-  Future<Map<String, dynamic>> getAnimals({int page = 1, String? searchQuery}) async {
-    final response = await ApiRequest().postRequest(AppApi.getAllAnimals, {'page': page, if (searchQuery != null) 'search_query': searchQuery});
+  Future<Map<String, dynamic>> getAnimals({int page = 1, String? searchQuery, int? staffID}) async {
+    final response = await ApiRequest().postRequest(AppApi.getAllAnimals, {
+      'page': page,
+      if (searchQuery != null) 'search_query': searchQuery,
+      if (staffID != null) 'staff_id': staffID,
+    });
 
     if (response.statusCode != 200) throw Exception('Failed to load animals: ${response.body}');
 
