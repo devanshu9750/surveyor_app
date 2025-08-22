@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:surveyor_app/core/app_constants.dart';
+import 'package:surveyor_app/core/app_extensions.dart';
 import 'package:surveyor_app/features/addUpdateAnimal/add_update_animal_screen.dart';
 import 'package:surveyor_app/features/addUpdateUser/add_update_user_screen.dart';
 import 'package:surveyor_app/features/home/home_controller.dart';
+import 'package:surveyor_app/features/home/widgets/animals_list/animal_list_controller.dart';
 import 'package:surveyor_app/features/home/widgets/animals_list/animal_list_widget.dart';
 import 'package:surveyor_app/features/home/widgets/users_list/users_list_widget.dart';
 
@@ -17,8 +18,66 @@ class HomeScreen extends StatelessWidget {
       init: HomeController(),
       builder: (controller) {
         return Scaffold(
-          appBar: AppBar(leading: const Icon(Icons.menu), title: Text("Admin - ${controller.user.value?.name ?? ''}"), elevation: 10),
-          floatingActionButton: controller.user.value?.userType == AppConstants.adminUserTypeID
+          appBar: AppBar(
+            leading: const Icon(Icons.menu),
+            title: Text("Admin - ${controller.user.value?.name ?? ''}"),
+            actions: [
+              Obx(
+                () => controller.bottomBarIndex.value == 1
+                    ? Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 4.w),
+                        child: SearchAnchor(
+                          searchController: controller.searchController,
+                          builder: (_, _) => Icon(Icons.search),
+                          suggestionsBuilder: (_, searchController) {
+                            return [
+                              Obx(
+                                () => ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: controller.searchedAnimals.length,
+                                  itemBuilder: (context, index) {
+                                    final animal = controller.searchedAnimals[index];
+                                    return ListTile(
+                                      onTap: () => controller.searchedAnimalTap(animal),
+                                      title: Text(animal.ownerName ?? ''),
+                                      subtitle: Text("Tag: ${animal.tagNumber ?? ''}"),
+                                      trailing: Get.find<HomeController>().isAdmin
+                                          ? PopupMenuButton(
+                                              itemBuilder: (_) {
+                                                return [
+                                                  PopupMenuItem(value: 'edit', child: Text('Edit')),
+                                                  if (animal.isSpotInitiated == false)
+                                                    PopupMenuItem(value: 'initiate_spot', child: Text('Initiate Spot')),
+                                                ];
+                                              },
+                                              onSelected: (value) {
+                                                switch (value) {
+                                                  case 'edit':
+                                                    Get.back();
+                                                    Get.toNamed('/add-update-animal', arguments: animal);
+                                                    break;
+                                                  case 'initiate_spot':
+                                                    if (Get.isRegistered<AnimalListController>()) {
+                                                      Get.find<AnimalListController>().initiateSpot(animal.id!);
+                                                    }
+                                                    break;
+                                                }
+                                              },
+                                            )
+                                          : null,
+                                    );
+                                  },
+                                ),
+                              ),
+                            ];
+                          },
+                        ),
+                      )
+                    : const SizedBox(),
+              ),
+            ],
+          ),
+          floatingActionButton: controller.isAdmin
               ? FloatingActionButton(
                   onPressed: () => controller.bottomBarIndex.value == 0
                       ? Get.toNamed(AddUpdateUserScreen.routeName)
@@ -28,10 +87,10 @@ class HomeScreen extends StatelessWidget {
                   child: const Icon(Icons.add),
                 )
               : null,
-          body: controller.user.value?.userType == AppConstants.adminUserTypeID
+          body: controller.isAdmin
               ? Obx(() => IndexedStack(index: controller.bottomBarIndex.value, children: const [UsersListWidget(), AnimalListWidget()]))
               : const SizedBox(),
-          bottomNavigationBar: controller.user.value?.userType == AppConstants.adminUserTypeID
+          bottomNavigationBar: controller.isAdmin
               ? Obx(
                   () => BottomNavigationBar(
                     elevation: 10,

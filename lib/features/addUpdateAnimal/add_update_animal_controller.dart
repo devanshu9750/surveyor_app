@@ -22,8 +22,10 @@ class AddUpdateAnimalController extends GetxController {
   final staffList = <User>[].obs;
 
   void addUpdateAnimal() async {
+    Animal tempAnimal = Animal();
+
     if (animal.value.id == null) {
-      animal.value = Animal(
+      tempAnimal = Animal(
         tagNumber: tagNumber.text,
         ownerName: ownerName.text,
         village: village.text,
@@ -33,7 +35,7 @@ class AddUpdateAnimalController extends GetxController {
         policyDate: DateTime.tryParse(policyDate.text),
       );
     } else {
-      animal.value = Animal.copyWith(
+      tempAnimal = Animal.copyWith(
         animal.value,
         tagNumber: tagNumber.text,
         ownerName: ownerName.text,
@@ -47,7 +49,7 @@ class AddUpdateAnimalController extends GetxController {
 
     try {
       AnimalRepo animalRepo = AnimalRepo();
-      await animalRepo.addOrUpdateAnimal({...animal.value.toJson(), if (staffID.value != -1) 'staff_id': staffID.value});
+      await animalRepo.addOrUpdateAnimal({...tempAnimal.toJson(), if (staffID.value != -1) 'staff_id': staffID.value});
       if (Get.isRegistered<AnimalListController>()) {
         Get.find<AnimalListController>()
           ..page.value = 1
