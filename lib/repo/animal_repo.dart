@@ -49,4 +49,17 @@ class AnimalRepo {
 
     return data['contents'];
   }
+
+  Future<Map<String, dynamic>> getAnimalById({required int id}) async {
+    final response = await ApiRequest().postRequest(AppApi.getAnimalDetails, {'id': id});
+
+    if (response.statusCode != 200) throw Exception('Failed to load animal: ${response.body}');
+
+    Map<String, dynamic> data = response.body;
+    if (data['status'] == AppConstants.errorStatus) {
+      throw Exception('Failed to load animal: ${data['message']}');
+    }
+
+    return data['contents'];
+  }
 }

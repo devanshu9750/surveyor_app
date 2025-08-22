@@ -18,7 +18,11 @@ class StaffAnimalListWidget extends StatelessWidget {
                   itemCount: controller.animalList.length,
                   itemBuilder: (context, index) {
                     final animal = controller.animalList[index];
-                    return ListTile(title: Text(animal.ownerName ?? ''), subtitle: Text("Tag: ${animal.tagNumber ?? ''}"));
+                    return ListTile(
+                      onTap: () => Get.toNamed('/animal-detail', arguments: animal.id),
+                      title: Text(animal.ownerName ?? ''),
+                      subtitle: Text("Tag: ${animal.tagNumber ?? ''}"),
+                    );
                   },
                 ),
               ),

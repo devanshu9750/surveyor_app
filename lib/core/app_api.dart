@@ -6,4 +6,5 @@ class AppApi {
   static const String addOrUpdateAnimal = '$baseUrl/animal/add_or_update_animal';
   static const String getAllAnimals = '$baseUrl/animal/get_all_animals';
   static const String initiateSpotForAnimal = '$baseUrl/animal/initiate_spot_for_animal';
+  static const String getAnimalDetails = '$baseUrl/animal/get_animal_details';
 }
