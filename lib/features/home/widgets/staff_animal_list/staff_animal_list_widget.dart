@@ -14,17 +14,21 @@ class StaffAnimalListWidget extends StatelessWidget {
           children: [
             Expanded(
               child: Obx(
-                () => ListView.builder(
-                  itemCount: controller.animalList.length,
-                  itemBuilder: (context, index) {
-                    final animal = controller.animalList[index];
-                    return ListTile(
-                      onTap: () => Get.toNamed('/animal-detail', arguments: animal.id),
-                      title: Text(animal.ownerName ?? ''),
-                      subtitle: Text("Tag: ${animal.tagNumber ?? ''}"),
-                    );
-                  },
-                ),
+                () => controller.isLoading.value
+                    ? const Center(child: CircularProgressIndicator())
+                    : controller.animalList.isEmpty
+                    ? const Center(child: Text('No animals found'))
+                    : ListView.builder(
+                        itemCount: controller.animalList.length,
+                        itemBuilder: (context, index) {
+                          final animal = controller.animalList[index];
+                          return ListTile(
+                            onTap: () => Get.toNamed('/animal-detail', arguments: animal.id),
+                            title: Text(animal.ownerName ?? ''),
+                            subtitle: Text("Tag: ${animal.tagNumber ?? ''}"),
+                          );
+                        },
+                      ),
               ),
             ),
           ],

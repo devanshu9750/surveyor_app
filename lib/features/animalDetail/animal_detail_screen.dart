@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:surveyor_app/core/app_extensions.dart';
 import 'package:surveyor_app/features/animalDetail/animal_detail_controller.dart';
+import 'package:surveyor_app/features/viewDocuments/view_documents_screen.dart';
 
 class AnimalDetailScreen extends StatelessWidget {
   const AnimalDetailScreen({super.key});
@@ -14,29 +15,51 @@ class AnimalDetailScreen extends StatelessWidget {
       builder: (controller) {
         return Scaffold(
           appBar: AppBar(title: const Text('Animal Details')),
-          body: SingleChildScrollView(
-            padding: EdgeInsets.all(4.w),
-            child: Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.w)),
-              child: Padding(
-                padding: EdgeInsets.all(4.w),
-                child: Obx(
-                  () => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildDetailRow('Tag Number', controller.animal.value.tagNumber),
-                      _buildDetailRow('Owner Name', controller.animal.value.ownerName),
-                      _buildDetailRow('Village', controller.animal.value.village),
-                      _buildDetailRow('Taluka', controller.animal.value.taluka),
-                      _buildDetailRow('Pincode', controller.animal.value.pincode),
-                      _buildDetailRow('Sum Insured', controller.animal.value.sumInsured.toString()),
-                      _buildDetailRow('Policy Date', controller.animal.value.policyDate.toString().split(' ')[0]),
-                    ],
+          body: Column(
+            children: [
+              Card(
+                elevation: 2,
+                margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.w)),
+                child: Padding(
+                  padding: EdgeInsets.all(4.w),
+                  child: Obx(
+                    () => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildDetailRow('Tag Number', controller.animal.value.tagNumber),
+                        _buildDetailRow('Owner Name', controller.animal.value.ownerName),
+                        _buildDetailRow('Village', controller.animal.value.village),
+                        _buildDetailRow('Taluka', controller.animal.value.taluka),
+                        _buildDetailRow('Pincode', controller.animal.value.pincode),
+                        _buildDetailRow('Sum Insured', controller.animal.value.sumInsured.toString()),
+                        _buildDetailRow('Policy Date', controller.animal.value.policyDate.toString().split(' ')[0]),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
+              Obx(
+                () => controller.animal.value.inspectionImages?.isNotEmpty ?? false
+                    ? Card(
+                        margin: EdgeInsets.symmetric(horizontal: 4.w),
+                        child: ListTile(
+                          onTap: () => Get.toNamed(ViewDocumentsScreen.routeName, arguments: controller.animal.value.inspectionImages),
+                          title: const Text("Inspection Images", style: TextStyle(fontWeight: FontWeight.bold)),
+                          trailing: Icon(Icons.adaptive.arrow_forward_rounded),
+                        ),
+                      )
+                    : const SizedBox(),
+              ),
+              const Spacer(),
+              Padding(
+                padding: EdgeInsetsGeometry.symmetric(vertical: 2.h),
+                child: SizedBox(
+                  width: 90.w,
+                  child: FilledButton(onPressed: () {}, child: const Text('Add Inspection Document')),
+                ),
+              ),
+            ],
           ),
         );
       },

@@ -13,6 +13,7 @@ class Animal {
   bool? isSpotInitiated;
   bool? isSpotCompleted;
   bool? isClaimProcessedFromTPA;
+  List<InspectionImage>? inspectionImages;
 
   Animal({
     this.id,
@@ -29,6 +30,7 @@ class Animal {
     this.isSpotInitiated,
     this.isSpotCompleted,
     this.isClaimProcessedFromTPA,
+    this.inspectionImages,
   });
 
   factory Animal.copyWith(
@@ -47,6 +49,7 @@ class Animal {
     bool? isSpotInitiated,
     bool? isSpotCompleted,
     bool? isClaimProcessedFromTPA,
+    List<InspectionImage>? inspectionImages,
   }) {
     return Animal(
       id: id ?? animal?.id,
@@ -63,6 +66,7 @@ class Animal {
       isSpotInitiated: isSpotInitiated ?? animal?.isSpotInitiated,
       isSpotCompleted: isSpotCompleted ?? animal?.isSpotCompleted,
       isClaimProcessedFromTPA: isClaimProcessedFromTPA ?? animal?.isClaimProcessedFromTPA,
+      inspectionImages: inspectionImages ?? animal?.inspectionImages,
     );
   }
 
@@ -82,10 +86,9 @@ class Animal {
       isSpotInitiated: json['is_spot_initiated'] ?? false,
       isSpotCompleted: json['is_spot_completed'] ?? false,
       isClaimProcessedFromTPA: json['is_claim_processed_from_tpa'] ?? false,
+      inspectionImages: (json['inspection_images'] as List<dynamic>?)?.map((e) => InspectionImage.fromJson(e)).toList(),
     );
   }
-
-  get species => null;
 
   Map<String, dynamic> toJson() {
     return {
@@ -111,4 +114,21 @@ class Animal {
 
   @override
   int get hashCode => id ?? -1;
+}
+
+class InspectionImage {
+  final int id;
+  final String url;
+  final String name;
+  final String uploadedAt;
+
+  InspectionImage({required this.id, required this.url, required this.name, required this.uploadedAt});
+
+  factory InspectionImage.fromJson(Map<String, dynamic> json) {
+    return InspectionImage(id: json['document_id'], url: json['document_url'], name: json['document_name'], uploadedAt: json['document_uploaded_at']);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'document_id': id, 'document_url': url, 'document_name': name, 'document_uploaded_at': uploadedAt};
+  }
 }

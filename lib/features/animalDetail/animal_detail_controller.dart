@@ -12,7 +12,7 @@ class AnimalDetailController extends GetxController {
 
     try {
       final data = await animalRepo.getAnimalById(id: arguments);
-      animal.value = Animal.fromJson(data['animal']);
+      animal.value = Animal.fromJson({...data['animal'], "inspection_images": data['inspection_images']});
     } catch (e) {
       ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text('Error fetching animal details: $e')));
     }
