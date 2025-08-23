@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:surveyor_app/core/app_enums.dart';
+import 'package:surveyor_app/features/animalDetail/widgets/document_picking_option_widget.dart';
 import 'package:surveyor_app/models/animal.dart';
 import 'package:surveyor_app/repo/animal_repo.dart';
 
 class AnimalDetailController extends GetxController {
   final arguments = Get.arguments;
   final animal = Animal().obs;
+
+  void showDocumentPickingOptions() async {
+    final result = await showModalBottomSheet<DocumentPickingOption?>(
+      context: Get.context!,
+      builder: (context) {
+        return const DocumentPickingOptionWidget();
+      },
+    );
+    if (result != null) {}
+  }
 
   void getAnimalDetails() async {
     AnimalRepo animalRepo = AnimalRepo();

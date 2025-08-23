@@ -56,7 +56,7 @@ class AnimalDetailScreen extends StatelessWidget {
                 padding: EdgeInsetsGeometry.symmetric(vertical: 2.h),
                 child: SizedBox(
                   width: 90.w,
-                  child: FilledButton(onPressed: () {}, child: const Text('Add Inspection Document')),
+                  child: FilledButton(onPressed: controller.showDocumentPickingOptions, child: const Text('Add Inspection Document')),
                 ),
               ),
             ],
