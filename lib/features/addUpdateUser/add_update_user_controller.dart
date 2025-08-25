@@ -39,7 +39,7 @@ class AddUpdateUserController extends GetxController {
 
     try {
       UserRepo userRepo = UserRepo();
-      await userRepo.addOrUpdateUser(userData: {...user.toJson(), if (password.text.isNotEmpty) "password": password.text});
+      await userRepo.addOrUpdateUser(userData: {...user.value.toJson(), if (password.text.isNotEmpty) "password": password.text});
       if (Get.isRegistered<UsersListController>()) Get.find<UsersListController>().getUsers();
       Get.back();
     } catch (e) {
