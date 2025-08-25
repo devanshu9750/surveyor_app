@@ -22,7 +22,7 @@ class AddUpdateAnimalController extends GetxController {
   final staffList = <User>[].obs;
 
   void addUpdateAnimal() async {
-    Animal tempAnimal = Animal();
+    late final Animal tempAnimal;
 
     if (animal.value.id == null) {
       tempAnimal = Animal(
