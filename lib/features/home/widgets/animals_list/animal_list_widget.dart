@@ -23,24 +23,29 @@ class AnimalListWidget extends StatelessWidget {
                     return ListTile(
                       onTap: () => Get.toNamed('/add-update-animal', arguments: animal),
                       title: Text(animal.ownerName ?? ''),
-                      subtitle: Text("Tag: ${animal.tagNumber ?? ''}"),
+                      subtitle: Text(
+                        "Tag: ${animal.tagNumber ?? ''}\nStatus: ${animal.isSpotCompleted == true
+                            ? 'SPOT COMPLETED'
+                            : animal.isSpotInitiated == true
+                            ? 'SPOT INITIATED'
+                            : 'CREATED'}",
+                      ),
                       trailing: Get.find<HomeController>().isAdmin
                           ? PopupMenuButton(
                               itemBuilder: (_) {
                                 return [
-                                  PopupMenuItem(value: 'edit', child: Text('Edit')),
-                                  if (animal.isSpotInitiated == false) PopupMenuItem(value: 'initiate_spot', child: Text('Initiate Spot')),
+                                  PopupMenuItem(
+                                    onTap: () => Get.toNamed('/add-update-animal', arguments: animal),
+                                    value: 'edit',
+                                    child: Text('Edit'),
+                                  ),
+                                  PopupMenuItem(
+                                    onTap: () => controller.initiateSpot(animal.id!),
+                                    value: 'initiate_spot',
+                                    enabled: animal.isSpotInitiated == false,
+                                    child: Text('Initiate Spot'),
+                                  ),
                                 ];
-                              },
-                              onSelected: (value) {
-                                switch (value) {
-                                  case 'edit':
-                                    Get.toNamed('/add-update-animal', arguments: animal);
-                                    break;
-                                  case 'initiate_spot':
-                                    controller.initiateSpot(animal.id!);
-                                    break;
-                                }
                               },
                             )
                           : null,
