@@ -1,3 +1,4 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:surveyor_app/core/api_request.dart';
 import 'package:surveyor_app/core/app_api.dart';
 import 'package:surveyor_app/core/app_constants.dart';
@@ -58,6 +59,19 @@ class AnimalRepo {
     Map<String, dynamic> data = response.body;
     if (data['status'] == AppConstants.errorStatus) {
       throw Exception('Failed to load animal: ${data['message']}');
+    }
+
+    return data['contents'];
+  }
+
+  Future<Map<String, dynamic>> uploadInspectionImage({required int id, required XFile image}) async {
+    final response = await ApiRequest().uploadFile(AppApi.addInspectionImageToAnimal, {'animal_id': id}, 'animal_doc', image);
+
+    if (response.statusCode != 200) throw Exception('Failed to upload inspection image: ${response.body}');
+
+    Map<String, dynamic> data = response.body;
+    if (data['status'] == AppConstants.errorStatus) {
+      throw Exception('Failed to upload inspection image: ${data['message']}');
     }
 
     return data['contents'];
