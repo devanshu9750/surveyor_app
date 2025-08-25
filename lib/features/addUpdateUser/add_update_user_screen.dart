@@ -15,58 +15,68 @@ class AddUpdateUserScreen extends StatelessWidget {
       builder: (controller) {
         return Scaffold(
           appBar: AppBar(title: controller.user.value.id != null ? const Text('Update User') : const Text('Add User')),
-          body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                TextFormField(
-                  controller: controller.name,
-                  decoration: const InputDecoration(labelText: 'Name', border: OutlineInputBorder()),
-                ),
-                SizedBox(height: 2.h),
-                TextFormField(
-                  controller: controller.phone,
-                  decoration: const InputDecoration(labelText: 'Mobile Number', border: OutlineInputBorder()),
-                  keyboardType: TextInputType.phone,
-                  validator: (value) => value?.isNumericOnly == true && value?.length == 10 ? null : 'Invalid phone number',
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                ),
-                SizedBox(height: 2.h),
-                TextFormField(
-                  controller: controller.email,
-                  decoration: const InputDecoration(labelText: 'Email', border: OutlineInputBorder()),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) => value?.isEmail == true ? null : 'Invalid email',
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                ),
-                SizedBox(height: 2.h),
-                TextFormField(
-                  controller: controller.password,
-                  decoration: const InputDecoration(labelText: 'Password', border: OutlineInputBorder()),
-                  obscureText: true,
-                ),
-                SizedBox(height: 2.h),
-                DropdownButtonFormField<int>(
-                  value: controller.userType.value,
-                  decoration: const InputDecoration(labelText: 'User Type', border: OutlineInputBorder()),
-                  items: const [
-                    DropdownMenuItem(value: AppConstants.staffUserTypeID, child: Text(AppConstants.staffUserTypeName)),
-                    DropdownMenuItem(value: AppConstants.tpaUserTypeID, child: Text(AppConstants.tpaUserTypeName)),
-                  ],
-                  onChanged: (value) => controller.userType.value = value ?? 2,
-                ),
-                const Spacer(),
-                SizedBox(
-                  width: double.infinity,
-                  child: Obx(
-                    () => FilledButton(
-                      onPressed: controller.enableAddUpdateButton.value ? controller.addUpdateUser : null,
-                      child: controller.user.value.id != null ? const Text('Update') : const Text('Add'),
+          body: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: controller.name,
+                            decoration: const InputDecoration(labelText: 'Name', border: OutlineInputBorder()),
+                          ),
+                          SizedBox(height: 2.h),
+                          TextFormField(
+                            controller: controller.phone,
+                            decoration: const InputDecoration(labelText: 'Mobile Number', border: OutlineInputBorder()),
+                            keyboardType: TextInputType.phone,
+                            validator: (value) => value?.isNumericOnly == true && value?.length == 10 ? null : 'Invalid phone number',
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                          ),
+                          SizedBox(height: 2.h),
+                          TextFormField(
+                            controller: controller.email,
+                            decoration: const InputDecoration(labelText: 'Email', border: OutlineInputBorder()),
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (value) => value?.isEmail == true ? null : 'Invalid email',
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                          ),
+                          SizedBox(height: 2.h),
+                          TextFormField(
+                            controller: controller.password,
+                            decoration: const InputDecoration(labelText: 'Password', border: OutlineInputBorder()),
+                            obscureText: true,
+                          ),
+                          SizedBox(height: 2.h),
+                          DropdownButtonFormField<int>(
+                            value: controller.userType.value,
+                            decoration: const InputDecoration(labelText: 'User Type', border: OutlineInputBorder()),
+                            items: const [
+                              DropdownMenuItem(value: AppConstants.staffUserTypeID, child: Text(AppConstants.staffUserTypeName)),
+                              DropdownMenuItem(value: AppConstants.tpaUserTypeID, child: Text(AppConstants.tpaUserTypeName)),
+                            ],
+                            onChanged: (value) => controller.userType.value = value ?? 2,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(height: 2.h),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Obx(
+                      () => FilledButton(
+                        onPressed: controller.enableAddUpdateButton.value ? controller.addUpdateUser : null,
+                        child: controller.user.value.id != null ? const Text('Update') : const Text('Add'),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );

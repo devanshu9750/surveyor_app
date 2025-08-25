@@ -16,75 +16,77 @@ class AnimalDetailScreen extends StatelessWidget {
       builder: (controller) {
         return Scaffold(
           appBar: AppBar(title: const Text('Animal Details')),
-          body: Column(
-            children: [
-              Card(
-                elevation: 2,
-                margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.w)),
-                child: Padding(
-                  padding: EdgeInsets.all(4.w),
-                  child: Obx(
-                    () => Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildDetailRow('Tag Number', controller.animal.value.tagNumber),
-                        _buildDetailRow('Owner Name', controller.animal.value.ownerName),
-                        _buildDetailRow('Village', controller.animal.value.village),
-                        _buildDetailRow('Taluka', controller.animal.value.taluka),
-                        _buildDetailRow('Pincode', controller.animal.value.pincode),
-                        _buildDetailRow('Sum Insured', controller.animal.value.sumInsured.toString()),
-                        _buildDetailRow('Policy Date', controller.animal.value.policyDate.toString().split(' ')[0]),
-                      ],
+          body: SafeArea(
+            child: Column(
+              children: [
+                Card(
+                  elevation: 2,
+                  margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.w)),
+                  child: Padding(
+                    padding: EdgeInsets.all(4.w),
+                    child: Obx(
+                      () => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildDetailRow('Tag Number', controller.animal.value.tagNumber),
+                          _buildDetailRow('Owner Name', controller.animal.value.ownerName),
+                          _buildDetailRow('Village', controller.animal.value.village),
+                          _buildDetailRow('Taluka', controller.animal.value.taluka),
+                          _buildDetailRow('Pincode', controller.animal.value.pincode),
+                          _buildDetailRow('Sum Insured', controller.animal.value.sumInsured.toString()),
+                          _buildDetailRow('Policy Date', controller.animal.value.policyDate.toString().split(' ')[0]),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Obx(
-                () => controller.animal.value.inspectionImages?.isNotEmpty ?? false
-                    ? Card(
-                        margin: EdgeInsets.symmetric(horizontal: 4.w),
-                        child: ListTile(
-                          onTap: () =>
-                              Get.toNamed(ViewDocumentsScreen.routeName, arguments: {"inspectionImages": controller.animal.value.inspectionImages}),
-                          title: const Text("Inspection Images", style: TextStyle(fontWeight: FontWeight.bold)),
-                          trailing: Icon(Icons.adaptive.arrow_forward_rounded),
-                        ),
-                      )
-                    : const SizedBox(),
-              ),
-              SizedBox(height: 2.h),
-              Obx(
-                () => controller.animal.value.animalDocuments?.isNotEmpty ?? false
-                    ? Card(
-                        margin: EdgeInsets.symmetric(horizontal: 4.w),
-                        child: ListTile(
-                          onTap: () =>
-                              Get.toNamed(ViewDocumentsScreen.routeName, arguments: {"animalDocuments": controller.animal.value.animalDocuments}),
-                          title: const Text("Animal Documents", style: TextStyle(fontWeight: FontWeight.bold)),
-                          trailing: Icon(Icons.adaptive.arrow_forward_rounded),
-                        ),
-                      )
-                    : const SizedBox(),
-              ),
-              const Spacer(),
-              if (Get.find<HomeController>().isTPA)
-                Padding(
-                  padding: EdgeInsetsGeometry.symmetric(vertical: 2.h),
-                  child: SizedBox(
-                    width: 90.w,
-                    child: FilledButton(onPressed: null, child: const Text('Mark as processed')),
-                  ),
-                )
-              else if (Get.find<HomeController>().isStaff)
-                Padding(
-                  padding: EdgeInsetsGeometry.symmetric(vertical: 2.h),
-                  child: SizedBox(
-                    width: 90.w,
-                    child: FilledButton(onPressed: controller.showDocumentPickingOptions, child: const Text('Add Inspection Image/Document')),
-                  ),
+                Obx(
+                  () => controller.animal.value.inspectionImages?.isNotEmpty ?? false
+                      ? Card(
+                          margin: EdgeInsets.symmetric(horizontal: 4.w),
+                          child: ListTile(
+                            onTap: () =>
+                                Get.toNamed(ViewDocumentsScreen.routeName, arguments: {"inspectionImages": controller.animal.value.inspectionImages}),
+                            title: const Text("Inspection Images", style: TextStyle(fontWeight: FontWeight.bold)),
+                            trailing: Icon(Icons.adaptive.arrow_forward_rounded),
+                          ),
+                        )
+                      : const SizedBox(),
                 ),
-            ],
+                SizedBox(height: 2.h),
+                Obx(
+                  () => controller.animal.value.animalDocuments?.isNotEmpty ?? false
+                      ? Card(
+                          margin: EdgeInsets.symmetric(horizontal: 4.w),
+                          child: ListTile(
+                            onTap: () =>
+                                Get.toNamed(ViewDocumentsScreen.routeName, arguments: {"animalDocuments": controller.animal.value.animalDocuments}),
+                            title: const Text("Animal Documents", style: TextStyle(fontWeight: FontWeight.bold)),
+                            trailing: Icon(Icons.adaptive.arrow_forward_rounded),
+                          ),
+                        )
+                      : const SizedBox(),
+                ),
+                const Spacer(),
+                if (Get.find<HomeController>().isTPA)
+                  Padding(
+                    padding: EdgeInsetsGeometry.symmetric(vertical: 2.h),
+                    child: SizedBox(
+                      width: 90.w,
+                      child: FilledButton(onPressed: null, child: const Text('Mark as processed')),
+                    ),
+                  )
+                else if (Get.find<HomeController>().isStaff)
+                  Padding(
+                    padding: EdgeInsetsGeometry.symmetric(vertical: 2.h),
+                    child: SizedBox(
+                      width: 90.w,
+                      child: FilledButton(onPressed: controller.showDocumentPickingOptions, child: const Text('Add Inspection Image/Document')),
+                    ),
+                  ),
+              ],
+            ),
           ),
         );
       },
