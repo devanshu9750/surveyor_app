@@ -15,8 +15,13 @@ class AppRouter {
     AddUpdateAnimalScreen.routeName: (_) => const AddUpdateAnimalScreen(),
     AnimalDetailScreen.routeName: (_) => const AnimalDetailScreen(),
     ViewDocumentsScreen.routeName: (context) {
-      final documents = ModalRoute.of(context)!.settings.arguments as List<InspectionImage>;
-      return ViewDocumentsScreen(inspectionImages: documents);
+      final args = ModalRoute.of(context)!.settings.arguments;
+      if (args is Map) {
+        final inspectionImages = args['inspectionImages'] as List<InspectionImage>? ?? [];
+        final animalDocuments = args['animalDocuments'] as List<AnimalDocument>? ?? [];
+        return ViewDocumentsScreen(inspectionImages: inspectionImages, animalDocuments: animalDocuments);
+      }
+      return const ViewDocumentsScreen();
     },
   };
 }

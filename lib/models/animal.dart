@@ -14,7 +14,7 @@ class Animal {
   bool? isSpotCompleted;
   bool? isClaimProcessedFromTPA;
   List<InspectionImage>? inspectionImages;
-  List<InspectionDocument>? inspectionDocuments;
+  List<AnimalDocument>? animalDocuments;
 
   Animal({
     this.id,
@@ -32,7 +32,7 @@ class Animal {
     this.isSpotCompleted,
     this.isClaimProcessedFromTPA,
     this.inspectionImages,
-    this.inspectionDocuments,
+    this.animalDocuments,
   });
 
   factory Animal.copyWith(
@@ -52,7 +52,7 @@ class Animal {
     bool? isSpotCompleted,
     bool? isClaimProcessedFromTPA,
     List<InspectionImage>? inspectionImages,
-    List<InspectionDocument>? inspectionDocuments,
+    List<AnimalDocument>? animalDocuments,
   }) {
     return Animal(
       id: id ?? animal?.id,
@@ -70,7 +70,7 @@ class Animal {
       isSpotCompleted: isSpotCompleted ?? animal?.isSpotCompleted,
       isClaimProcessedFromTPA: isClaimProcessedFromTPA ?? animal?.isClaimProcessedFromTPA,
       inspectionImages: inspectionImages ?? animal?.inspectionImages,
-      inspectionDocuments: inspectionDocuments ?? animal?.inspectionDocuments,
+      animalDocuments: animalDocuments ?? animal?.animalDocuments,
     );
   }
 
@@ -91,7 +91,7 @@ class Animal {
       isSpotCompleted: json['is_spot_completed'] ?? false,
       isClaimProcessedFromTPA: json['is_claim_processed_from_tpa'] ?? false,
       inspectionImages: (json['inspection_images'] as List<dynamic>?)?.map((e) => InspectionImage.fromJson(e)).toList(),
-      inspectionDocuments: (json['inspection_documents'] as List<dynamic>?)?.map((e) => InspectionDocument.fromJson(e)).toList(),
+      animalDocuments: (json['animal_documents'] as List<dynamic>?)?.map((e) => AnimalDocument.fromJson(e)).toList(),
     );
   }
 
@@ -111,6 +111,8 @@ class Animal {
       'is_spot_initiated': isSpotInitiated,
       'is_spot_completed': isSpotCompleted,
       'is_claim_processed_from_tpa': isClaimProcessedFromTPA,
+      'inspection_images': inspectionImages?.map((e) => e.toJson()).toList(),
+      'animal_documents': animalDocuments?.map((e) => e.toJson()).toList(),
     };
   }
 
@@ -138,21 +140,16 @@ class InspectionImage {
   }
 }
 
-class InspectionDocument {
+class AnimalDocument {
   final int id;
   final String url;
   final String name;
   final String uploadedAt;
 
-  InspectionDocument({required this.id, required this.url, required this.name, required this.uploadedAt});
+  AnimalDocument({required this.id, required this.url, required this.name, required this.uploadedAt});
 
-  factory InspectionDocument.fromJson(Map<String, dynamic> json) {
-    return InspectionDocument(
-      id: json['document_id'],
-      url: json['document_url'],
-      name: json['document_name'],
-      uploadedAt: json['document_uploaded_at'],
-    );
+  factory AnimalDocument.fromJson(Map<String, dynamic> json) {
+    return AnimalDocument(id: json['document_id'], url: json['document_url'], name: json['document_name'], uploadedAt: json['document_uploaded_at']);
   }
 
   Map<String, dynamic> toJson() {

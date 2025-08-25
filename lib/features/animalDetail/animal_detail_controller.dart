@@ -41,7 +41,7 @@ class AnimalDetailController extends GetxController {
         showUploadingIndicator();
         AnimalRepo animalRepo = AnimalRepo();
         final data = await animalRepo.uploadInspectionPDF(id: animal.value.id!, pdf: XFile(pdfPath));
-        animal.value.inspectionDocuments?.add(InspectionDocument.fromJson(data));
+        animal.value.animalDocuments?.add(AnimalDocument.fromJson(data));
         ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text('PDF uploaded successfully !!')));
       } catch (e) {
         ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text('Error uploading PDF: $e')));
@@ -99,7 +99,11 @@ class AnimalDetailController extends GetxController {
 
     try {
       final data = await animalRepo.getAnimalById(id: arguments);
-      animal.value = Animal.fromJson({...data['animal'], "inspection_images": data['inspection_images']});
+      animal.value = Animal.fromJson({
+        ...data['animal'],
+        "inspection_images": data['inspection_images'],
+        "animal_documents": data['animal_documents'],
+      });
     } catch (e) {
       ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text('Error fetching animal details: $e')));
     }

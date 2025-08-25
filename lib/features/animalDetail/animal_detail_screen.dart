@@ -44,8 +44,23 @@ class AnimalDetailScreen extends StatelessWidget {
                     ? Card(
                         margin: EdgeInsets.symmetric(horizontal: 4.w),
                         child: ListTile(
-                          onTap: () => Get.toNamed(ViewDocumentsScreen.routeName, arguments: controller.animal.value.inspectionImages),
+                          onTap: () =>
+                              Get.toNamed(ViewDocumentsScreen.routeName, arguments: {"inspectionImages": controller.animal.value.inspectionImages}),
                           title: const Text("Inspection Images", style: TextStyle(fontWeight: FontWeight.bold)),
+                          trailing: Icon(Icons.adaptive.arrow_forward_rounded),
+                        ),
+                      )
+                    : const SizedBox(),
+              ),
+              SizedBox(height: 2.h),
+              Obx(
+                () => controller.animal.value.animalDocuments?.isNotEmpty ?? false
+                    ? Card(
+                        margin: EdgeInsets.symmetric(horizontal: 4.w),
+                        child: ListTile(
+                          onTap: () =>
+                              Get.toNamed(ViewDocumentsScreen.routeName, arguments: {"animalDocuments": controller.animal.value.animalDocuments}),
+                          title: const Text("Animal Documents", style: TextStyle(fontWeight: FontWeight.bold)),
                           trailing: Icon(Icons.adaptive.arrow_forward_rounded),
                         ),
                       )
@@ -56,7 +71,7 @@ class AnimalDetailScreen extends StatelessWidget {
                 padding: EdgeInsetsGeometry.symmetric(vertical: 2.h),
                 child: SizedBox(
                   width: 90.w,
-                  child: FilledButton(onPressed: controller.showDocumentPickingOptions, child: const Text('Add Inspection Document')),
+                  child: FilledButton(onPressed: controller.showDocumentPickingOptions, child: const Text('Add Inspection Image/Document')),
                 ),
               ),
             ],
