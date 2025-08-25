@@ -25,8 +25,10 @@ class AddUpdateUserController extends GetxController {
   }
 
   void addUpdateUser() async {
+    late final User temp;
+
     if (user.value.id == null) {
-      user.value = User(
+      temp = User(
         name: name.text,
         mobileNo: int.tryParse(phone.text),
         email: email.text,
@@ -34,12 +36,12 @@ class AddUpdateUserController extends GetxController {
         statusId: AppConstants.userStatusPublished,
       );
     } else {
-      user.value = User.copyWith(user.value, name: name.text, mobileNo: int.tryParse(phone.text), email: email.text, userType: userType.value);
+      temp = User.copyWith(user.value, name: name.text, mobileNo: int.tryParse(phone.text), email: email.text, userType: userType.value);
     }
 
     try {
       UserRepo userRepo = UserRepo();
-      await userRepo.addOrUpdateUser(userData: {...user.value.toJson(), if (password.text.isNotEmpty) "password": password.text});
+      await userRepo.addOrUpdateUser(userData: {...temp.toJson(), if (password.text.isNotEmpty) "password": password.text});
       if (Get.isRegistered<UsersListController>()) Get.find<UsersListController>().getUsers();
       Get.back();
     } catch (e) {
