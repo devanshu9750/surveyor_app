@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:surveyor_app/core/app_extensions.dart';
+import 'package:surveyor_app/features/animalDetail/animal_detail_screen.dart';
 import 'package:surveyor_app/features/home/home_controller.dart';
 import 'package:surveyor_app/features/home/widgets/animals_list/animal_list_controller.dart';
 
@@ -21,7 +22,7 @@ class AnimalListWidget extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final animal = controller.animalList[index];
                     return ListTile(
-                      onTap: () => Get.toNamed('/add-update-animal', arguments: animal),
+                      onTap: () => Get.toNamed(AnimalDetailScreen.routeName, arguments: animal.id),
                       title: Text(animal.ownerName ?? ''),
                       subtitle: Text(
                         "Tag: ${animal.tagNumber ?? ''}\nStatus: ${animal.isSpotCompleted == true

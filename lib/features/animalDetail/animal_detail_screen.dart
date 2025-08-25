@@ -76,7 +76,7 @@ class AnimalDetailScreen extends StatelessWidget {
                     child: FilledButton(onPressed: null, child: const Text('Mark as processed')),
                   ),
                 )
-              else
+              else if (Get.find<HomeController>().isStaff)
                 Padding(
                   padding: EdgeInsetsGeometry.symmetric(vertical: 2.h),
                   child: SizedBox(

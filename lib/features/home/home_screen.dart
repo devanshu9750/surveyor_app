@@ -64,28 +64,29 @@ class HomeScreen extends StatelessWidget {
                                       return ListTile(
                                         onTap: () => controller.searchedAnimalTap(animal),
                                         title: Text(animal.ownerName ?? ''),
-                                        subtitle: Text("Tag: ${animal.tagNumber ?? ''}"),
+                                        subtitle: Text(
+                                          "Tag: ${animal.tagNumber ?? ''}\nStatus: ${animal.isSpotCompleted == true
+                                              ? "SPOT COMPLETED"
+                                              : animal.isSpotInitiated == true
+                                              ? "SPOT INITIATED"
+                                              : "CREATED"}",
+                                        ),
                                         trailing: Get.find<HomeController>().isAdmin
                                             ? PopupMenuButton(
                                                 itemBuilder: (_) {
                                                   return [
-                                                    PopupMenuItem(value: 'edit', child: Text('Edit')),
-                                                    if (animal.isSpotInitiated == false)
-                                                      PopupMenuItem(value: 'initiate_spot', child: Text('Initiate Spot')),
+                                                    PopupMenuItem(
+                                                      onTap: () => Get.toNamed('/add-update-animal', arguments: animal),
+                                                      value: 'edit',
+                                                      child: Text('Edit'),
+                                                    ),
+                                                    PopupMenuItem(
+                                                      enabled: animal.isSpotInitiated == false,
+                                                      onTap: () => Get.find<AnimalListController>().initiateSpot(animal.id!),
+                                                      value: 'initiate_spot',
+                                                      child: Text('Initiate Spot'),
+                                                    ),
                                                   ];
-                                                },
-                                                onSelected: (value) {
-                                                  switch (value) {
-                                                    case 'edit':
-                                                      Get.back();
-                                                      Get.toNamed('/add-update-animal', arguments: animal);
-                                                      break;
-                                                    case 'initiate_spot':
-                                                      if (Get.isRegistered<AnimalListController>()) {
-                                                        Get.find<AnimalListController>().initiateSpot(animal.id!);
-                                                      }
-                                                      break;
-                                                  }
                                                 },
                                               )
                                             : null,
