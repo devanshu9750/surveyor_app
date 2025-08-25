@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:surveyor_app/core/app_extensions.dart';
 import 'package:surveyor_app/features/animalDetail/animal_detail_controller.dart';
+import 'package:surveyor_app/features/home/home_controller.dart';
 import 'package:surveyor_app/features/viewDocuments/view_documents_screen.dart';
 
 class AnimalDetailScreen extends StatelessWidget {
@@ -67,13 +68,22 @@ class AnimalDetailScreen extends StatelessWidget {
                     : const SizedBox(),
               ),
               const Spacer(),
-              Padding(
-                padding: EdgeInsetsGeometry.symmetric(vertical: 2.h),
-                child: SizedBox(
-                  width: 90.w,
-                  child: FilledButton(onPressed: controller.showDocumentPickingOptions, child: const Text('Add Inspection Image/Document')),
+              if (Get.find<HomeController>().isTPA)
+                Padding(
+                  padding: EdgeInsetsGeometry.symmetric(vertical: 2.h),
+                  child: SizedBox(
+                    width: 90.w,
+                    child: FilledButton(onPressed: null, child: const Text('Mark as processed')),
+                  ),
+                )
+              else
+                Padding(
+                  padding: EdgeInsetsGeometry.symmetric(vertical: 2.h),
+                  child: SizedBox(
+                    width: 90.w,
+                    child: FilledButton(onPressed: controller.showDocumentPickingOptions, child: const Text('Add Inspection Image/Document')),
+                  ),
                 ),
-              ),
             ],
           ),
         );

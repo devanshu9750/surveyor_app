@@ -7,6 +7,7 @@ import 'package:surveyor_app/features/home/home_controller.dart';
 import 'package:surveyor_app/features/home/widgets/animals_list/animal_list_controller.dart';
 import 'package:surveyor_app/features/home/widgets/animals_list/animal_list_widget.dart';
 import 'package:surveyor_app/features/home/widgets/staff_animal_list/staff_animal_list_widget.dart';
+import 'package:surveyor_app/features/home/widgets/tpa_animal_list/tpa_animal_list_widget.dart';
 import 'package:surveyor_app/features/home/widgets/users_list/users_list_widget.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -44,59 +45,60 @@ class HomeScreen extends StatelessWidget {
                   : "TPA"} - ${controller.user.value?.name ?? ''}",
             ),
             actions: [
-              Obx(
-                () => controller.bottomBarIndex.value == 1
-                    ? Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 4.w),
-                        child: SearchAnchor(
-                          searchController: controller.searchController,
-                          builder: (_, _) => Icon(Icons.search),
-                          suggestionsBuilder: (_, searchController) {
-                            return [
-                              Obx(
-                                () => ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: controller.searchedAnimals.length,
-                                  itemBuilder: (context, index) {
-                                    final animal = controller.searchedAnimals[index];
-                                    return ListTile(
-                                      onTap: () => controller.searchedAnimalTap(animal),
-                                      title: Text(animal.ownerName ?? ''),
-                                      subtitle: Text("Tag: ${animal.tagNumber ?? ''}"),
-                                      trailing: Get.find<HomeController>().isAdmin
-                                          ? PopupMenuButton(
-                                              itemBuilder: (_) {
-                                                return [
-                                                  PopupMenuItem(value: 'edit', child: Text('Edit')),
-                                                  if (animal.isSpotInitiated == false)
-                                                    PopupMenuItem(value: 'initiate_spot', child: Text('Initiate Spot')),
-                                                ];
-                                              },
-                                              onSelected: (value) {
-                                                switch (value) {
-                                                  case 'edit':
-                                                    Get.back();
-                                                    Get.toNamed('/add-update-animal', arguments: animal);
-                                                    break;
-                                                  case 'initiate_spot':
-                                                    if (Get.isRegistered<AnimalListController>()) {
-                                                      Get.find<AnimalListController>().initiateSpot(animal.id!);
-                                                    }
-                                                    break;
-                                                }
-                                              },
-                                            )
-                                          : null,
-                                    );
-                                  },
+              if (controller.isAdmin)
+                Obx(
+                  () => controller.bottomBarIndex.value == 1
+                      ? Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 4.w),
+                          child: SearchAnchor(
+                            searchController: controller.searchController,
+                            builder: (_, _) => Icon(Icons.search),
+                            suggestionsBuilder: (_, searchController) {
+                              return [
+                                Obx(
+                                  () => ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: controller.searchedAnimals.length,
+                                    itemBuilder: (context, index) {
+                                      final animal = controller.searchedAnimals[index];
+                                      return ListTile(
+                                        onTap: () => controller.searchedAnimalTap(animal),
+                                        title: Text(animal.ownerName ?? ''),
+                                        subtitle: Text("Tag: ${animal.tagNumber ?? ''}"),
+                                        trailing: Get.find<HomeController>().isAdmin
+                                            ? PopupMenuButton(
+                                                itemBuilder: (_) {
+                                                  return [
+                                                    PopupMenuItem(value: 'edit', child: Text('Edit')),
+                                                    if (animal.isSpotInitiated == false)
+                                                      PopupMenuItem(value: 'initiate_spot', child: Text('Initiate Spot')),
+                                                  ];
+                                                },
+                                                onSelected: (value) {
+                                                  switch (value) {
+                                                    case 'edit':
+                                                      Get.back();
+                                                      Get.toNamed('/add-update-animal', arguments: animal);
+                                                      break;
+                                                    case 'initiate_spot':
+                                                      if (Get.isRegistered<AnimalListController>()) {
+                                                        Get.find<AnimalListController>().initiateSpot(animal.id!);
+                                                      }
+                                                      break;
+                                                  }
+                                                },
+                                              )
+                                            : null,
+                                      );
+                                    },
+                                  ),
                                 ),
-                              ),
-                            ];
-                          },
-                        ),
-                      )
-                    : const SizedBox(),
-              ),
+                              ];
+                            },
+                          ),
+                        )
+                      : const SizedBox(),
+                ),
             ],
           ),
           floatingActionButton: controller.isAdmin
@@ -113,7 +115,7 @@ class HomeScreen extends StatelessWidget {
               ? Obx(() => IndexedStack(index: controller.bottomBarIndex.value, children: const [UsersListWidget(), AnimalListWidget()]))
               : controller.isStaff
               ? StaffAnimalListWidget()
-              : const SizedBox(),
+              : const TpaAnimalListWidget(),
           bottomNavigationBar: controller.isAdmin
               ? Obx(
                   () => BottomNavigationBar(
@@ -123,6 +125,18 @@ class HomeScreen extends StatelessWidget {
                     items: const [
                       BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Users'),
                       BottomNavigationBarItem(icon: Icon(Icons.pets), label: 'Animal Policies'),
+                    ],
+                  ),
+                )
+              : controller.isTPA
+              ? Obx(
+                  () => BottomNavigationBar(
+                    elevation: 10,
+                    onTap: (value) => controller.bottomBarIndex.value = value,
+                    currentIndex: controller.bottomBarIndex.value,
+                    items: const [
+                      BottomNavigationBarItem(icon: Icon(Icons.person), label: 'In Progress'),
+                      BottomNavigationBarItem(icon: Icon(Icons.pets), label: 'Completed'),
                     ],
                   ),
                 )
