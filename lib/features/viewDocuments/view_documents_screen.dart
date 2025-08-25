@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:surveyor_app/core/app_extensions.dart';
 import 'package:surveyor_app/models/animal.dart';
 
@@ -64,7 +65,29 @@ class ViewDocumentsScreen extends StatelessWidget {
                   final image = inspectionImages[index];
                   return GestureDetector(
                     onTap: () {
-                      // Handle image tap
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              Image.network(image.url, fit: BoxFit.cover),
+                              Positioned(
+                                left: 4.w,
+                                top: 2.h,
+                                child: GestureDetector(
+                                  onTap: Get.back,
+                                  child: Container(
+                                    padding: EdgeInsets.all(1.w),
+                                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black54),
+                                    child: Icon(Icons.close, color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
                     child: GridTile(
                       child: Image.network(
