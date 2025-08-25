@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:surveyor_app/core/app_extensions.dart';
 import 'package:surveyor_app/models/animal.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class ViewDocumentsScreen extends StatelessWidget {
   const ViewDocumentsScreen({super.key, this.inspectionImages = const [], this.animalDocuments = const []});
@@ -29,12 +30,35 @@ class ViewDocumentsScreen extends StatelessWidget {
                   final document = animalDocuments[index];
                   return GestureDetector(
                     onTap: () {
-                      // Handle PDF tap
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              SfPdfViewer.network(document.url),
+                              Positioned(
+                                left: 4.w,
+                                top: 2.h,
+                                child: GestureDetector(
+                                  onTap: Get.back,
+                                  child: Container(
+                                    padding: EdgeInsets.all(1.w),
+                                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black54),
+                                    child: Icon(Icons.close, color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
                     child: GridTile(
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.black, width: 0.1.w),
+                          borderRadius: BorderRadius.circular(2.w),
                         ),
                         child: Stack(
                           fit: StackFit.expand,
@@ -45,8 +69,11 @@ class ViewDocumentsScreen extends StatelessWidget {
                               left: 0,
                               right: 0,
                               child: Container(
-                                color: Colors.black54,
                                 padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: Colors.black54,
+                                  borderRadius: BorderRadius.vertical(bottom: Radius.circular(2.w)),
+                                ),
                                 child: Text(
                                   document.name,
                                   style: const TextStyle(color: Colors.white),
