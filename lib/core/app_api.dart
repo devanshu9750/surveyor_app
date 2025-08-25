@@ -8,4 +8,5 @@ class AppApi {
   static const String initiateSpotForAnimal = '$baseUrl/animal/initiate_spot_for_animal';
   static const String getAnimalDetails = '$baseUrl/animal/get_animal_details';
   static const String addInspectionImageToAnimal = '$baseUrl/animal/add_inspection_image_to_animal';
+  static const String addDocumentToAnimal = '$baseUrl/animal/add_document_to_animal';
 }

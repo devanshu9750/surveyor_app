@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:surveyor_app/core/app_enums.dart';
 import 'package:surveyor_app/core/app_extensions.dart';
 import 'package:surveyor_app/features/animalDetail/widgets/document_picking_option_widget.dart';
 import 'package:surveyor_app/models/animal.dart';
 import 'package:surveyor_app/repo/animal_repo.dart';
 import 'package:surveyor_app/utils/camera_util.dart';
+import 'package:surveyor_app/utils/pdf_util.dart';
 
 class AnimalDetailController extends GetxController {
   final arguments = Get.arguments;
@@ -24,8 +26,29 @@ class AnimalDetailController extends GetxController {
         case DocumentPickingOption.camera:
           captureAndUploadImage();
           break;
-        default:
+        case DocumentPickingOption.pdf:
+          pickAndUploadPDF();
           break;
+      }
+    }
+  }
+
+  void pickAndUploadPDF() async {
+    final pdfPath = await PdfUtil.pickPdfFile();
+
+    if (pdfPath != null && animal.value.id != null) {
+      try {
+        showUploadingIndicator();
+        AnimalRepo animalRepo = AnimalRepo();
+        final data = await animalRepo.uploadInspectionPDF(id: animal.value.id!, pdf: XFile(pdfPath));
+        animal.value.inspectionDocuments?.add(InspectionDocument.fromJson(data));
+        ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text('PDF uploaded successfully !!')));
+      } catch (e) {
+        ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text('Error uploading PDF: $e')));
+      } finally {
+        if (_uploadingWidgetKey.currentContext != null) {
+          Navigator.of(_uploadingWidgetKey.currentContext!).pop();
+        }
       }
     }
   }
