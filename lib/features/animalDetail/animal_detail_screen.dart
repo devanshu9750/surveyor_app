@@ -70,12 +70,16 @@ class AnimalDetailScreen extends StatelessWidget {
                 ),
                 const Spacer(),
                 if (Get.find<HomeController>().isTPA)
-                  Padding(
-                    padding: EdgeInsetsGeometry.symmetric(vertical: 2.h),
-                    child: SizedBox(
-                      width: 90.w,
-                      child: FilledButton(onPressed: null, child: const Text('Mark as processed')),
-                    ),
+                  Obx(
+                    () => (controller.animal.value.isSpotCompleted == true && controller.animal.value.isClaimProcessedFromTPA != true)
+                        ? Padding(
+                            padding: EdgeInsetsGeometry.symmetric(vertical: 2.h),
+                            child: SizedBox(
+                              width: 90.w,
+                              child: FilledButton(onPressed: controller.markAsProcessed, child: const Text('Mark as processed')),
+                            ),
+                          )
+                        : const SizedBox(),
                   )
                 else if (Get.find<HomeController>().isStaff)
                   Obx(

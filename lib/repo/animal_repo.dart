@@ -117,4 +117,17 @@ class AnimalRepo {
 
     return data['contents'];
   }
+
+  Future<Map<String, dynamic>> animalClaimMarkAsProcessedFromTpa({required int id}) async {
+    final response = await ApiRequest().postRequest(AppApi.animalClaimMarkAsProcessedFromTpa, {'id': id});
+
+    if (response.statusCode != 200) throw Exception('Failed to mark animal as processed: ${response.body}');
+
+    Map<String, dynamic> data = response.body;
+    if (data['status'] == AppConstants.errorStatus) {
+      throw Exception('Failed to mark animal as processed: ${data['message']}');
+    }
+
+    return data['contents'];
+  }
 }

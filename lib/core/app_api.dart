@@ -11,4 +11,5 @@ class AppApi {
   static const String addDocumentToAnimal = '$baseUrl/animal/add_document_to_animal';
   static const String addSpotImageToAnimal = '$baseUrl/animal/add_spot_image_to_animal';
   static const String completeSpotForAnimal = '$baseUrl/animal/complete_spot_for_animal';
+  static const String animalClaimMarkAsProcessedFromTpa = '$baseUrl/animal/animal_claim_mark_as_processed_from_tpa';
 }

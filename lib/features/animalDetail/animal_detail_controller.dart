@@ -148,6 +148,19 @@ class AnimalDetailController extends GetxController {
     }
   }
 
+  void markAsProcessed() async {
+    AnimalRepo animalRepo = AnimalRepo();
+
+    try {
+      await animalRepo.animalClaimMarkAsProcessedFromTpa(id: animal.value.id!);
+      getAnimalDetails();
+      if (Get.isRegistered<StaffAnimalListController>()) Get.find<StaffAnimalListController>().getAnimals();
+      ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text('Animal marked as processed successfully !!')));
+    } catch (e) {
+      ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text('Error marking animal as processed: $e')));
+    }
+  }
+
   @override
   void onInit() {
     super.onInit();
