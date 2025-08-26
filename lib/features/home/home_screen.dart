@@ -112,11 +112,13 @@ class HomeScreen extends StatelessWidget {
                   child: const Icon(Icons.add),
                 )
               : null,
-          body: controller.isAdmin
-              ? Obx(() => IndexedStack(index: controller.bottomBarIndex.value, children: const [UsersListWidget(), AnimalListWidget()]))
-              : controller.isStaff
-              ? StaffAnimalListWidget()
-              : const TpaAnimalListWidget(),
+          body: SafeArea(
+            child: controller.isAdmin
+                ? Obx(() => IndexedStack(index: controller.bottomBarIndex.value, children: const [UsersListWidget(), AnimalListWidget()]))
+                : controller.isStaff
+                ? StaffAnimalListWidget()
+                : const TpaAnimalListWidget(),
+          ),
           bottomNavigationBar: controller.isAdmin
               ? Obx(
                   () => BottomNavigationBar(
