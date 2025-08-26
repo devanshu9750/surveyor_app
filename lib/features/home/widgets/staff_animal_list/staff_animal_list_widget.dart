@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:surveyor_app/core/app_extensions.dart';
 import 'package:surveyor_app/features/animalDetail/animal_detail_screen.dart';
 import 'package:surveyor_app/features/home/widgets/staff_animal_list/staff_animal_list_controller.dart';
 
@@ -36,6 +37,29 @@ class StaffAnimalListWidget extends StatelessWidget {
                           );
                         },
                       ),
+              ),
+            ),
+
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.5.h),
+              width: double.infinity,
+              decoration: BoxDecoration(color: context.theme.primaryColor.withValues(alpha: 0.1)),
+              child: Wrap(
+                spacing: 2.w,
+                children: List.generate(
+                  controller.animalFilters.length,
+                  (index) => Obx(
+                    () => ChoiceChip(
+                      label: Text(controller.animalFilters[index]),
+                      selected: controller.selectedAnimalFilter.value == controller.animalFilters[index],
+                      onSelected: (selected) {
+                        if (selected) {
+                          controller.toggleAnimalFilter(controller.animalFilters[index]);
+                        }
+                      },
+                    ),
+                  ),
+                ),
               ),
             ),
           ],
