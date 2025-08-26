@@ -26,7 +26,13 @@ class StaffAnimalListWidget extends StatelessWidget {
                           return ListTile(
                             onTap: () => Get.toNamed(AnimalDetailScreen.routeName, arguments: animal.id),
                             title: Text(animal.ownerName ?? ''),
-                            subtitle: Text("Tag: ${animal.tagNumber ?? ''} ${animal.isSpotInitiated == true ? '\nStatus: Spot Initiated' : ''}"),
+                            subtitle: Text(
+                              "Tag: ${animal.tagNumber ?? ''} ${animal.isSpotCompleted == true
+                                  ? '\nStatus: Spot Completed'
+                                  : animal.isSpotInitiated == true
+                                  ? '\nStatus: Spot Initiated'
+                                  : ''}",
+                            ),
                           );
                         },
                       ),

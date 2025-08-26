@@ -1,20 +1,21 @@
 class Animal {
-  int? id;
-  String? tagNumber;
-  String? ownerName;
-  String? village;
-  String? taluka;
-  String? pincode;
-  int? sumInsured;
-  DateTime? policyDate;
-  DateTime? createdAt;
-  DateTime? updatedAt;
-  int? staffId;
-  bool? isSpotInitiated;
-  bool? isSpotCompleted;
-  bool? isClaimProcessedFromTPA;
-  List<InspectionImage>? inspectionImages;
-  List<AnimalDocument>? animalDocuments;
+  final int? id;
+  final String? tagNumber;
+  final String? ownerName;
+  final String? village;
+  final String? taluka;
+  final String? pincode;
+  final int? sumInsured;
+  final DateTime? policyDate;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final int? staffId;
+  final bool? isSpotInitiated;
+  final bool? isSpotCompleted;
+  final bool? isClaimProcessedFromTPA;
+  final List<InspectionImage>? inspectionImages;
+  final List<AnimalDocument>? animalDocuments;
+  final List<SpotImage>? spotImages;
 
   Animal({
     this.id,
@@ -33,6 +34,7 @@ class Animal {
     this.isClaimProcessedFromTPA,
     this.inspectionImages,
     this.animalDocuments,
+    this.spotImages,
   });
 
   factory Animal.copyWith(
@@ -53,6 +55,7 @@ class Animal {
     bool? isClaimProcessedFromTPA,
     List<InspectionImage>? inspectionImages,
     List<AnimalDocument>? animalDocuments,
+    List<SpotImage>? spotImages,
   }) {
     return Animal(
       id: id ?? animal?.id,
@@ -71,6 +74,7 @@ class Animal {
       isClaimProcessedFromTPA: isClaimProcessedFromTPA ?? animal?.isClaimProcessedFromTPA,
       inspectionImages: inspectionImages ?? animal?.inspectionImages,
       animalDocuments: animalDocuments ?? animal?.animalDocuments,
+      spotImages: spotImages ?? animal?.spotImages,
     );
   }
 
@@ -92,6 +96,7 @@ class Animal {
       isClaimProcessedFromTPA: json['is_claim_processed_from_tpa'] ?? false,
       inspectionImages: (json['inspection_images'] as List<dynamic>?)?.map((e) => InspectionImage.fromJson(e)).toList(),
       animalDocuments: (json['animal_documents'] as List<dynamic>?)?.map((e) => AnimalDocument.fromJson(e)).toList(),
+      spotImages: (json['spot_images'] as List<dynamic>?)?.map((e) => SpotImage.fromJson(e)).toList(),
     );
   }
 
@@ -113,6 +118,7 @@ class Animal {
       'is_claim_processed_from_tpa': isClaimProcessedFromTPA,
       'inspection_images': inspectionImages?.map((e) => e.toJson()).toList(),
       'animal_documents': animalDocuments?.map((e) => e.toJson()).toList(),
+      'spot_images': spotImages?.map((e) => e.toJson()).toList(),
     };
   }
 
@@ -150,6 +156,23 @@ class AnimalDocument {
 
   factory AnimalDocument.fromJson(Map<String, dynamic> json) {
     return AnimalDocument(id: json['document_id'], url: json['document_url'], name: json['document_name'], uploadedAt: json['document_uploaded_at']);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'document_id': id, 'document_url': url, 'document_name': name, 'document_uploaded_at': uploadedAt};
+  }
+}
+
+class SpotImage {
+  final int id;
+  final String url;
+  final String name;
+  final String uploadedAt;
+
+  SpotImage({required this.id, required this.url, required this.name, required this.uploadedAt});
+
+  factory SpotImage.fromJson(Map<String, dynamic> json) {
+    return SpotImage(id: json['document_id'], url: json['document_url'], name: json['document_name'], uploadedAt: json['document_uploaded_at']);
   }
 
   Map<String, dynamic> toJson() {

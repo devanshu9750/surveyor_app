@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:surveyor_app/core/app_enums.dart';
 import 'package:surveyor_app/core/app_extensions.dart';
 import 'package:surveyor_app/features/animalDetail/widgets/document_picking_option_widget.dart';
+import 'package:surveyor_app/features/home/widgets/staff_animal_list/staff_animal_list_controller.dart';
 import 'package:surveyor_app/models/animal.dart';
 import 'package:surveyor_app/repo/animal_repo.dart';
 import 'package:surveyor_app/utils/camera_util.dart';
@@ -24,7 +25,7 @@ class AnimalDetailController extends GetxController {
     if (result != null) {
       switch (result) {
         case DocumentPickingOption.camera:
-          captureAndUploadImage();
+          captureAndUploadImage(isSpotImage: true);
           break;
         case DocumentPickingOption.pdf:
           pickAndUploadPDF();
@@ -40,7 +41,7 @@ class AnimalDetailController extends GetxController {
       try {
         showUploadingIndicator();
         AnimalRepo animalRepo = AnimalRepo();
-        final data = await animalRepo.uploadInspectionPDF(id: animal.value.id!, pdf: XFile(pdfPath));
+        final data = await animalRepo.uploadSpotPDF(id: animal.value.id!, pdf: XFile(pdfPath));
         animal.value.animalDocuments?.add(AnimalDocument.fromJson(data));
         ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text('PDF uploaded successfully !!')));
       } catch (e) {
@@ -53,14 +54,19 @@ class AnimalDetailController extends GetxController {
     }
   }
 
-  void captureAndUploadImage() async {
+  void captureAndUploadImage({bool isSpotImage = false}) async {
     final image = await CameraUtil.captureImage();
     if (image != null && animal.value.id != null) {
       try {
         showUploadingIndicator();
         AnimalRepo animalRepo = AnimalRepo();
-        final data = await animalRepo.uploadInspectionImage(id: animal.value.id!, image: image);
-        animal.value.inspectionImages?.add(InspectionImage.fromJson(data));
+        if (isSpotImage) {
+          final data = await animalRepo.uploadSpotImage(id: animal.value.id!, image: image);
+          animal.value.spotImages?.add(SpotImage.fromJson(data));
+        } else {
+          final data = await animalRepo.uploadInspectionImage(id: animal.value.id!, image: image);
+          animal.value.inspectionImages?.add(InspectionImage.fromJson(data));
+        }
         ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text('Image uploaded successfully !!')));
       } catch (e) {
         ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text('Error uploading image: $e')));
@@ -106,6 +112,39 @@ class AnimalDetailController extends GetxController {
       });
     } catch (e) {
       ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text('Error fetching animal details: $e')));
+    }
+  }
+
+  Future<bool?> showSpotConfirmationDialogue() async {
+    return await showDialog(
+      context: Get.context!,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Confirm Completion'),
+          content: const Text('Are you sure you want to complete the spot for this animal? '),
+          actions: [
+            TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
+            ElevatedButton(onPressed: () => Get.back(result: true), child: const Text('Confirm')),
+          ],
+        );
+      },
+    );
+  }
+
+  void completeSpotForAnimal() async {
+    var result = await showSpotConfirmationDialogue();
+
+    if (result == true) {
+      AnimalRepo animalRepo = AnimalRepo();
+
+      try {
+        await animalRepo.completeSpotForAnimal(id: animal.value.id!);
+        getAnimalDetails();
+        if (Get.isRegistered<StaffAnimalListController>()) Get.find<StaffAnimalListController>().getAnimals();
+        ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text('Spot completed successfully !!')));
+      } catch (e) {
+        ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text('Error completing spot: $e')));
+      }
     }
   }
 

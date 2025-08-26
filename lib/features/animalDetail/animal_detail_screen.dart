@@ -78,12 +78,31 @@ class AnimalDetailScreen extends StatelessWidget {
                     ),
                   )
                 else if (Get.find<HomeController>().isStaff)
-                  Padding(
-                    padding: EdgeInsetsGeometry.symmetric(vertical: 2.h),
-                    child: SizedBox(
-                      width: 90.w,
-                      child: FilledButton(onPressed: controller.showDocumentPickingOptions, child: const Text('Add Inspection Image/Document')),
-                    ),
+                  Obx(
+                    () => controller.animal.value.isSpotInitiated == null || controller.animal.value.isSpotCompleted == true
+                        ? const SizedBox()
+                        : controller.animal.value.isSpotInitiated!
+                        ? Column(
+                            children: [
+                              SizedBox(
+                                width: 90.w,
+                                child: OutlinedButton(onPressed: controller.completeSpotForAnimal, child: const Text('Mark Spot As Completed')),
+                              ),
+                              SizedBox(height: 1.h),
+                              SizedBox(
+                                width: 90.w,
+                                child: FilledButton(onPressed: controller.showDocumentPickingOptions, child: const Text('Add Spot Image/PDF')),
+                              ),
+                              SizedBox(height: 2.h),
+                            ],
+                          )
+                        : Padding(
+                            padding: EdgeInsetsGeometry.symmetric(vertical: 2.h),
+                            child: SizedBox(
+                              width: 90.w,
+                              child: FilledButton(onPressed: controller.captureAndUploadImage, child: const Text('Add Inspection Image')),
+                            ),
+                          ),
                   ),
               ],
             ),

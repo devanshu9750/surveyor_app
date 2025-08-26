@@ -79,14 +79,40 @@ class AnimalRepo {
     return data['contents'];
   }
 
-  Future<Map<String, dynamic>> uploadInspectionPDF({required int id, required XFile pdf}) async {
-    final response = await ApiRequest().uploadFile(AppApi.addDocumentToAnimal, {'animal_id': id}, 'animal_doc', pdf);
+  Future<Map<String, dynamic>> uploadSpotImage({required int id, required XFile image}) async {
+    final response = await ApiRequest().uploadFile(AppApi.addSpotImageToAnimal, {'animal_id': id}, 'animal_doc', image);
 
-    if (response.statusCode != 200) throw Exception('Failed to upload inspection PDF: ${response.body}');
+    if (response.statusCode != 200) throw Exception('Failed to upload spot image: ${response.body}');
 
     Map<String, dynamic> data = response.body;
     if (data['status'] == AppConstants.errorStatus) {
-      throw Exception('Failed to upload inspection PDF: ${data['message']}');
+      throw Exception('Failed to upload spot image: ${data['message']}');
+    }
+
+    return data['contents'];
+  }
+
+  Future<Map<String, dynamic>> uploadSpotPDF({required int id, required XFile pdf}) async {
+    final response = await ApiRequest().uploadFile(AppApi.addDocumentToAnimal, {'animal_id': id}, 'animal_doc', pdf);
+
+    if (response.statusCode != 200) throw Exception('Failed to upload spot PDF: ${response.body}');
+
+    Map<String, dynamic> data = response.body;
+    if (data['status'] == AppConstants.errorStatus) {
+      throw Exception('Failed to upload spot PDF: ${data['message']}');
+    }
+
+    return data['contents'];
+  }
+
+  Future<Map<String, dynamic>> completeSpotForAnimal({required int id}) async {
+    final response = await ApiRequest().postRequest(AppApi.completeSpotForAnimal, {'id': id});
+
+    if (response.statusCode != 200) throw Exception('Failed to complete spot: ${response.body}');
+
+    Map<String, dynamic> data = response.body;
+    if (data['status'] == AppConstants.errorStatus) {
+      throw Exception('Failed to complete spot: ${data['message']}');
     }
 
     return data['contents'];

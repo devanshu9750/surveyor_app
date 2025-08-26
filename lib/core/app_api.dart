@@ -10,4 +10,5 @@ class AppApi {
   static const String addInspectionImageToAnimal = '$baseUrl/animal/add_inspection_image_to_animal';
   static const String addDocumentToAnimal = '$baseUrl/animal/add_document_to_animal';
   static const String addSpotImageToAnimal = '$baseUrl/animal/add_spot_image_to_animal';
+  static const String completeSpotForAnimal = '$baseUrl/animal/complete_spot_for_animal';
 }
