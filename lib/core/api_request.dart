@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,7 +11,7 @@ class ApiRequest extends GetConnect {
   Future<Response> postRequest(String url, Map<String, dynamic> body) async {
     final response = await post(url, body);
     if (kDebugMode) {
-      print('POST $url: $body');
+      print('POST $url: ${jsonEncode(body)}');
       print('Response: ${response.body}');
     }
     return response;
